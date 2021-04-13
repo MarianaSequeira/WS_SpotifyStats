@@ -1,4 +1,4 @@
-#!/home/mariana/Documents/MEI/WS/venv/bin/python
+#!/home/mariana/Documents/MEI/WS/WS_SpotifyStats/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
