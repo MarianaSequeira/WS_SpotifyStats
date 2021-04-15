@@ -19,6 +19,11 @@ from WS_SpotifyStats import views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('songs/', views.home, name='songs'),
+    path('bands/', views.home, name='bands'),
+    path('genres/', views.home, name='genres'),
+    path('stats/', views.home, name='stats'),
+
     path('admin/', admin.site.urls),
 
 ]
