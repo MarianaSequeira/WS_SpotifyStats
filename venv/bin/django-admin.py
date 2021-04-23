@@ -1,4 +1,4 @@
-#!/home/mariana/Documents/MEI/WS/WS_SpotifyStats/venv/bin/python
+#!/home/repi/ManjaroOld/Desktop/disciplinas/MEI/2_ano/2_semestre/WS/WS_SpotifyStats/venv/bin/python
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 

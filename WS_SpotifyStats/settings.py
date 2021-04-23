@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
 import os
 from pathlib import Path
 
@@ -21,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qjcrpagr#%g*5=_5_rhv8h01b9ib9f48v319h(x7e5ykqvg8t7'
+SECRET_KEY = 'django-insecure-qav6l)-qw=iwuot#a5g#4!sq(_vn1lvsuvy4l)e*67zl-^gd3m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -120,6 +119,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
 # Add these new lines
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'WS_SpotifyStats/static'),
