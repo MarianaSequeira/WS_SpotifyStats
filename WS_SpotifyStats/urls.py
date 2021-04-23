@@ -19,7 +19,8 @@ from WS_SpotifyStats import views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('songs/', views.home, name='songs'),
+    path('songs/', views.song_page, name='songs'),
+    path('artists/<str:id>/', views.artist_page, name='songs'),
     path('bands/', views.home, name='bands'),
     path('genres/', views.home, name='genres'),
     path('stats/', views.home, name='stats'),

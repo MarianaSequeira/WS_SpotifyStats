@@ -65,6 +65,23 @@ def get_song_by_partial_name(name):
     return res['results']['bindings']
 
 
+def get_artist_by_partial_name(name):
+    query = f"""{PREFIXES}
+    select distinct * where {{
+        ?s pred:type type:artist .
+        ?s pred:name ?name .
+        filter regex(?name,"{name}", "i")
+    }} limit 100 """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
 def get_artist_with_genre(genre):
     query = f"""{PREFIXES}
     select distinct ?s ?name where {{
@@ -121,5 +138,53 @@ def get_similar_songs_by_artists_genre(song_uri):
     return res['results']['bindings']
 
 
+def get_name_of_artists_by_genre(genre_uri):
+    query = f"""{PREFIXES}
+    select ?s ?name where {{
+        ?s pred:type type:artist .
+        ?s pred:genre <{genre_uri}> .
+        ?s pred:name ?name
+    }}"""
+    payload_query = {"query": query}
 
-print(get_similar_songs_by_artists_genre("http://SpotifyStats.com/song/3syPKM9ORE0fyb7tucLR58"))
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+def get_name_of_artists_by_genre_name(genre_name):
+    query = f"""{PREFIXES}
+    select ?s ?name where {{
+        ?s pred:type type:artist .
+        ?genre pred:name "{genre_name}" . 
+        ?s pred:genre ?genre .
+        ?s pred:name ?name
+    }}"""
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+def describe_entity(uri):
+    query = f"""SELECT * WHERE {{ <{uri}> ?p ?o }}"""
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+# GET MOST POPULAR SONGS OF ARTIST (artist_uri)
+
+print(describe_entity("http://SpotifyStats.com/song/2DFRFqWNahKtFD112H2iEZ"))
