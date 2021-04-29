@@ -4,6 +4,7 @@ from WS_SpotifyStats.data_accessor import *
 
 basename = "http://SpotifyStats.com/"
 
+
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
@@ -20,8 +21,6 @@ def song_page(request):
 
     res = describe_entity("http://SpotifyStats.com/song/2DFRFqWNahKtFD112H2iEZ")
 
-    print(res)
-
     tparams = {
         'res': res,
     }
@@ -33,22 +32,63 @@ def artist_page(request, id):
     assert isinstance(request, HttpRequest)
 
     res = describe_entity(basename + 'artist/' + id)
+    artist_info = get_info(res)
 
-    print(res)
+    res = get_artist_genres(artist_info['name'])
+    artist_genre_info = get_info(res)
 
-    info = dict()
+    labels = []
+    data = []
 
-    for resource in res:
-        pred = resource['p']['value']
-        obj = resource['o']['value']
+    labels.append('Acousticness')
+    data.append("{:.2f}".format(float(artist_info.get('acousticness'))))
 
-        info[pred.replace('http://SpotifyStats.com/pred/', '')] = obj
+    labels.append('Danceability')
+    data.append("{:.2f}".format(float(artist_info.get('danceability'))))
 
-    print(info)
+    labels.append('Energy')
+    data.append("{:.2f}".format(float(artist_info.get('energy'))))
+
+    labels.append('Liveness')
+    data.append("{:.2f}".format(float(artist_info.get('liveness'))))
+
+    labels.append('Valence')
+    data.append("{:.2f}".format(float(artist_info.get('valence'))))
 
     tparams = {
         'id': id,
         'res': res,
-        'info':info
+        'artist_info': artist_info,
+        'artist_genre_info': artist_genre_info,
+        'labels': labels,
+        'data': data,
     }
+
     return render(request, 'artistPage.html', tparams)
+
+
+def genre_page(request, id):
+    res = describe_entity(basename + 'genre/' + id)
+    genre_info = get_info(res)
+
+    tparams = {
+        'id': id,
+        'genre_info':genre_info
+
+    }
+    return render(request, 'genrePage.html', tparams)
+
+
+def get_info(res):
+    info = dict()
+    for r in res:
+        stable_key = ""
+        for count, key in enumerate(r.keys()):
+            if count == 0:
+                stable_key = r[key]['value'].replace('http://SpotifyStats.com/pred/', '')
+                continue
+            info[stable_key] = r[key]['value'].replace('http://SpotifyStats.com/pred/', '')
+
+    print(info)
+    return info
+

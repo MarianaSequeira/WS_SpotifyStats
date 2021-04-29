@@ -106,7 +106,7 @@ def get_artist_genres(artist_name):
         ?s pred:name "{artist_name}" .
         ?s pred:genre ?genre .
         ?genre pred:name ?name .
-    }} limit 100"""
+    }}"""
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
@@ -173,6 +173,40 @@ def get_name_of_artists_by_genre_name(genre_name):
     return res['results']['bindings']
 
 
+def get_most_popular_songs_of_artist(artist_uri):
+    query = f"""{PREFIXES}
+    select distinct * 
+    where {{
+        ?s pred:artists {artist_uri} .
+        ?s pred:popularity ?pop
+    }}  
+    ORDER BY DESC(?pop) LIMIT 10"""
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+def get_songs_by_artist(artist_uri):
+    query = f"""{PREFIXES}
+    select distinct * 
+    where {{
+        ?s pred:artists {artist_uri} .
+    }}"""
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
 def describe_entity(uri):
     query = f"""SELECT * WHERE {{ <{uri}> ?p ?o }}"""
     payload_query = {"query": query}
@@ -184,7 +218,5 @@ def describe_entity(uri):
 
     return res['results']['bindings']
 
-
-# GET MOST POPULAR SONGS OF ARTIST (artist_uri)
 
 print(describe_entity("http://SpotifyStats.com/song/2DFRFqWNahKtFD112H2iEZ"))
