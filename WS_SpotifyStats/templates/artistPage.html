@@ -97,57 +97,46 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <!-- song -->
-                                    <div class="song-item">
-                                    <div class="row">
-                                        <div class="col-xl-5 col-lg-12 col-md-5">
-                                            <div class="song-info-box">
-                                                <img src="{% static 'img/songs/2.jpg' %}" alt="">
-                                                <div class="song-info">
-                                                    <h4>Michael Smith</h4>
-                                                    <p>Dream in colors</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-7 col-lg-12 col-md-7">
-                                            <div class="single_player_container">
-                                                <div class="single_player row">
-                                                    <div class="col" id="player" style="display: none;"></div>
+                                            <div class="col-xl-7 col-lg-12 col-md-7">
+                                                <div class="single_player_container">
+                                                    <div class="single_player row">
 
-                                                    <!-- Player Controls -->
-                                                    <div class="player_controls_box col">
-                                                        <button id="play" class="jp-play player_button" type="button"
-                                                                onclick="playVideo('3Ba_WoSZXvw')"></button>
-                                                        <button id="pause" class="jp-stop player_button" type="button"
-                                                                onclick="pauseVideo()"></button>
-                                                    </div>
-                                                    <!-- Progress Bar -->
-                                                    <div class="player_bars row">
-                                                        <div class="col-sm-2" id="curr_time">0:00</div>
-                                                        <div class="col-sm-8">
-                                                            <div class="w3-border">
-                                                                <div id="progress" class="w3-grey"
-                                                                     style="height:1px;width:0%">
+
+                                                        <!-- Player Controls -->
+                                                        <div class="player_controls_box col">
+                                                            <button id="play" class="jp-play player_button"
+                                                                    type="button"
+                                                                    onclick="playVideo({{ video_id }})"></button>
+                                                            <button id="pause" class="jp-stop player_button"
+                                                                    type="button"player_controls_box
+                                                                    onclick="pauseVideo()"></button>
+                                                        </div>
+                                                        <!-- Progress Bar -->
+                                                        <div class="player_bars row">
+                                                            <div class="col-sm-2" id="curr_time">0:00</div>
+                                                            <div class="col-sm-8">
+                                                                <div class="w3-border">
+                                                                    <div id="progress" class="w3-grey"
+                                                                         style="height:1px;width:0%">
+                                                                    </div>
                                                                 </div>
                                                             </div>
+
+                                                            <div class="col-sm-2" id="duration">0:00</div>
+
                                                         </div>
-
-                                                        <div class="col-sm-2" id="duration">0:00</div>
-
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
                                 {% endfor %}
-                                </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
     <!-- Songs details section -->
