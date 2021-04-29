@@ -104,9 +104,12 @@ def artist_page(request, id):
     labels.append('Valence')
     data.append("{:.2f}".format(float(artist_info.get('valence'))))
     summary = "No artist information available"
+    wikipedia_url = ""
 
     try:
-        summary = wikipedia.summary(artist_info['name'], chars=400)
+        page = wikipedia.page(artist_info['name'])
+        summary = page.summary[:400]
+        wikipedia_url = page.url
     except Exception as e:
         pass
 
@@ -122,6 +125,7 @@ def artist_page(request, id):
         'most_popular_songs_info': most_popular_songs_info,
         'labels': labels,
         'summary': summary,
+        'wikipedia_url': wikipedia_url,
         'data': data,
         'duration': str(min) + ' min and ' + str(seg) + ' sec'
     }

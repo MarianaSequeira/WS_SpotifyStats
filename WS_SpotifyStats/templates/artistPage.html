@@ -16,7 +16,10 @@
                     <div class="col-lg-8">
                         <div class="wave-player-info">
                             <h2>{{ artist_info.name }}</h2>
-                            <p>{{ summary }}</p>
+                            <p style="text-align:justify; margin-top: 30px; font-size: 15px"> {{ summary }}...</p>
+                            {% if wikipedia_url != "" %}
+                                <p style="font-size: 13px"><i>Source: <a href="{{ wikipedia_url }}">Wikipedia</a></i></p>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="col-lg-4">
@@ -39,31 +42,29 @@
                         <h3><i class="fas fa-guitar"></i> Artist Details</h3>
                         <ul>
                             {% if artist_genre_info.keys|length > 0 %}
-                                <li>
+                                <li style="margin-top: 30px">
                                     <strong>Genre:</strong>
                                     <span>
-                                {% for k, v in artist_genre_info.items %}
-                                    <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/genre/' %}">{{ v|capfirst }}</a>
-                                    {% if forloop.counter != artist_genre_info|length %}, {% endif %}
-                                {% endfor %}
-                            </span>
+                                        {% for k, v in artist_genre_info.items %}
+                                            <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/genre/' %}">{{ v|capfirst }}</a>
+                                            {% if forloop.counter != artist_genre_info|length %}, {% endif %}
+                                        {% endfor %}
+                                    </span>
                                 </li>
                             {% endif %}
                             {% if artist_info.popularity %}
-                                <li>
-                                    <strong>Global
-                                        Popularity:</strong><span> {{ artist_info.popularity|slice:":6" }}</span>
+                                <li style="margin-top: 30px">
+                                    <strong>Global Popularity:</strong><span> {{ artist_info.popularity|slice:":6" }}</span>
                                 </li>
                             {% endif %}
                             {% if artist_info.count %}
-                                <li><strong>Number of Songs: </strong><span>{{ artist_info.count }}</span></li>
+                                <li style="margin-top: 30px"><strong>Number of Songs: </strong><span>{{ artist_info.count }}</span></li>
                             {% endif %}
                             {% if duration %}
-                                <li><strong>Avg. Song Duration: </strong><span>{{ duration }} </span></li>
+                                <li style="margin-top: 30px"><strong>Avg. Song Duration: </strong><span>{{ duration }} </span></li>
                             {% endif %}
                             {% if artist_info.tempo %}
-                                <li><strong>Avg. Tempo: </strong><span>{{ artist_info.tempo|slice:":6" }} bpm</span>
-                                </li>
+                                <li style="margin-top: 30px"><strong>Avg. Tempo: </strong><span>{{ artist_info.tempo|slice:":6" }} bpm</span></li>
                             {% endif %}
                         </ul>
                     </div>
@@ -74,7 +75,7 @@
                             <div class="song-details-box">
                                 <h3><i class="fas fa-chart-pie"></i> Stats</h3>
                                 <div class="artist-details">
-                                    <canvas id="pie-chart"></canvas>
+                                    <canvas id="pie-chart" height="125"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -84,7 +85,7 @@
                                 <!-- song -->
                                 <div id="player" style="display: none;"></div>
                                 {% for song, songInfo in most_popular_songs_info.items %}
-                                    <div class="song-item">
+                                    <div class="song-item" style="margin-top: 40px">
                                         <div class="row">
                                             <div class="col-xl-5 col-lg-12 col-md-5">
                                                 <div class="song-info-box">
