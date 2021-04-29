@@ -1,7 +1,105 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block content %}
 
-    {{res}}
+    <section class="player-section set-bg" data-setbg="{% static 'img/player-bg.jpg' %}">
+        <div class="player-box" style="padding-right: 20px">
+            <div class="row" style="width: 100%">
+                <div class="col-8">
+                    <div class="row">
+                        <div class="tarck-thumb-warp">
+                            <div class="tarck-thumb">
+                                <img src="{% static 'img/wave-thumb.jpg' %}" alt="">
+                                <button onclick="wavesurfer.playPause();" class="wp-play"></button>
+                            </div>
+                        </div>
+                        <div class="wave-player-warp" style="padding-top: 0px">
+                            <div class="wave-player-info">
+                                <h2>{{ song_info.name }}</h2>
+                            </div>
+                            <div class="row" style="padding-top: 47px">
+                                <div class="col-5">
+                                    <ul>
+                                        {% if artist_name %}
+                                            <li style="list-style: none">
+                                                <strong>Artist:</strong><a href="{% url 'artist' song_info.artists|cut:'http://SpotifyStats.com/artist/' %}"><span> {{ artist_name }}</span></a>
+                                            </li>
+                                        {% endif %}
+                                        {% if song_info.release_date %}
+                                            <li style="list-style: none; margin-top: 17px">
+                                                <strong>Release Date:</strong><span> {{ song_info.release_date }}</span>
+                                            </li>
+                                        {% endif %}
+                                        {% if artist_genre_info.keys|length > 0 %}
+                                            <li style="list-style: none; margin-top: 17px">
+                                                <strong>Genre:</strong>
+                                                <span>
+                                                    {% for k, v in artist_genre_info.items %}
+                                                        <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/genre/' %}">{{v|capfirst}}</a>
+                                                        {% if forloop.counter != artist_genre_info|length %}, {% endif %}
+                                                    {% endfor %}
+                                                </span>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                <div class="col-5">
+                                    <ul>
+                                        {% if song_info.popularity %}
+                                            <li style="list-style: none">
+                                                <strong>Popularity:</strong><span> {{ song_info.popularity|slice:":6" }}</span>
+                                            </li>
+                                        {% endif %}
+                                        {% if duration %}
+                                             <li style="list-style: none; margin-top: 17px">
+                                                 <strong>Duration: </strong><span>{{ duration }} </span>
+                                             </li>
+                                        {% endif %}
+                                        {% if song_info.tempo %}
+                                             <li style="list-style: none; margin-top: 17px">
+                                                 <strong>Tempo: </strong><span>{{ song_info.tempo|slice:":6" }} bpm</span>
+                                             </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <canvas id="pie-chart" height="165"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    {{ res }}
+
+    <script>
+        var config = {
+            type: 'polarArea',
+            data: {
+                datasets: [{
+                    data: {{ data|safe }},
+                    backgroundColor: [
+                        '#FAB314', '#717B86', '#08192D', '#E6E8EA', '#FF005A'
+                    ],
+                    label: 'Population'
+                }],
+                labels: {{ labels|safe }}
+            },
+            options: {
+                responsive: true
+            }
+        };
+
+
+        window.onload = function () {
+            var ctx = document.getElementById('pie-chart').getContext('2d');
+            window.myPie = new Chart(ctx, config);
+        };
+    </script>
 
 {% endblock %}

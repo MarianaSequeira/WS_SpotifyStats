@@ -207,6 +207,22 @@ def get_songs_by_artist(artist_uri):
     return res['results']['bindings']
 
 
+def get_artist_name_by_id(id):
+    query = f"""{PREFIXES}
+    SELECT ?name 
+    WHERE {{ 
+        artist:{id} pred:name ?name
+    }}
+    """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
 def describe_entity(uri):
     query = f"""SELECT * WHERE {{ <{uri}> ?p ?o }}"""
     payload_query = {"query": query}

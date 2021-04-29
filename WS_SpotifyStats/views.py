@@ -22,9 +22,44 @@ def song_page(request, id):
     assert isinstance(request, HttpRequest)
 
     res = describe_entity(basename + 'song/' + id)
+    song_info = get_info(res)
+
+    res = get_artist_name_by_id(song_info['artists'].replace("http://SpotifyStats.com/artist/", ""))
+    artist_name = res[0]['name']['value']
+
+    res = get_artist_genres(artist_name)
+    artist_genre_info = get_info(res)
+
+    labels = []
+    data = []
+
+    labels.append('Acousticness')
+    data.append("{:.2f}".format(float(song_info.get('acousticness'))))
+
+    labels.append('Danceability')
+    data.append("{:.2f}".format(float(song_info.get('danceability'))))
+
+    labels.append('Energy')
+    data.append("{:.2f}".format(float(song_info.get('energy'))))
+
+    labels.append('Liveness')
+    data.append("{:.2f}".format(float(song_info.get('liveness'))))
+
+    labels.append('Valence')
+    data.append("{:.2f}".format(float(song_info.get('valence'))))
+
+    duration_ms = float(song_info['duration_ms'])
+    min = math.floor(duration_ms / 60000)
+    seg = math.floor(duration_ms % 60000 / 1000);
 
     tparams = {
-        'res': res,
+        'song_info': song_info,
+        'labels': labels,
+        'data': data,
+        'artist_name': artist_name,
+        'artist_name': artist_name,
+        'duration': str(min) + ' min and ' + str(seg) + ' sec',
+        'artist_genre_info': artist_genre_info,
     }
     return render(request, 'songPage.html', tparams)
 
