@@ -3,6 +3,7 @@ import math
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from WS_SpotifyStats.data_accessor import *
+import wikipedia
 
 basename = "http://SpotifyStats.com/"
 
@@ -102,6 +103,12 @@ def artist_page(request, id):
 
     labels.append('Valence')
     data.append("{:.2f}".format(float(artist_info.get('valence'))))
+    summary = "No artist information available"
+
+    try:
+        summary = wikipedia.summary(artist_info['name'], chars=400)
+    except Exception as e:
+        pass
 
     duration_ms = float(artist_info['duration_ms'])
     min = math.floor(duration_ms / 60000)
@@ -114,6 +121,7 @@ def artist_page(request, id):
         'artist_genre_info': artist_genre_info,
         'most_popular_songs_info': most_popular_songs_info,
         'labels': labels,
+        'summary': summary,
         'data': data,
         'duration': str(min) + ' min and ' + str(seg) + ' sec'
     }

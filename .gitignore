@@ -1,3 +1,5 @@
 archive/
 venv/
 data/
+.idea/
+WS_SpotifyStats/__pycache__/

@@ -58,3 +58,64 @@ $(window).on('load', function() {
 
 })(jQuery);
 
+//##########################################
+//##########################################
+
+// daqui para a frente
+
+var player;
+// This code loads the IFrame Player API code asynchronously. This is the Youtube-recommended script loading method
+var tag = document.createElement("script");
+
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName("script")[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+
+// //  This function is called by YouTube once the the API is ready.It creates an &lt;iframe&gt; and sets up the video player inside.
+// function onYouTubeIframeAPIReady() {
+
+// }
+
+// The API will call this function when the video player is ready (in this case, start playing the video).
+function onPlayerReady(event) {
+    event.target.playVideo();
+}
+
+function check_time() {
+	var prog = player.getCurrentTime()/player.getDuration() * 100;
+	console.log(prog + "%");
+	$('#progress').css('width', prog+"%");
+	$('#curr_time').text(Math.floor(player.getCurrentTime()));
+	$('#duration').text(player.getDuration());
+	setTimeout(check_time, 1000);
+}
+
+// console.log(document.getElementById("play"));
+var init=false;
+function playVideo(video_id) {
+	if(!init){
+		player = new YT.Player("player", {
+			height: "320",
+			width: "320",
+			videoId: video_id,
+			events: {
+				// API event handlers<
+				onReady: onPlayerReady,
+				onStateChange: check_time
+			}
+		});
+		init=true;
+	}
+
+    player.playVideo();
+
+}
+function pauseVideo() {
+    player.pauseVideo();
+}
+
+
+
+
+
