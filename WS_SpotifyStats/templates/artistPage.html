@@ -36,19 +36,35 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="song-details-box">
-                        <h3>Song Details</h3>
+                        <h3><i class="fas fa-guitar"></i> Artist Details</h3>
                         <ul>
-                            <li><strong>Genre:</strong>
-                                <span>
-                                    {% for k, v in artist_genre_info.items %}
-                                        <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/genre/' %}">{{ v|capfirst }}</a>
-                                        {% if forloop.counter != artist_genre_info|length %}, {% endif %}
-                                    {% endfor %}
-                                </span>
-                            </li>
-                            <li><strong>Tags:</strong><span>quitar, piano, music, electronic music, minimal, chill music, pop, cultural, live, popular</span>
-                            </li>
-                            <li><strong>Instruments:</strong><span>quitar, piano, drums, bass</span></li>
+                            {% if artist_genre_info.keys|length > 0 %}
+                                <li>
+                                    <strong>Genre:</strong>
+                                    <span>
+                                {% for k, v in artist_genre_info.items %}
+                                    <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/genre/' %}">{{ v|capfirst }}</a>
+                                    {% if forloop.counter != artist_genre_info|length %}, {% endif %}
+                                {% endfor %}
+                            </span>
+                                </li>
+                            {% endif %}
+                            {% if artist_info.popularity %}
+                                <li>
+                                    <strong>Global
+                                        Popularity:</strong><span> {{ artist_info.popularity|slice:":6" }}</span>
+                                </li>
+                            {% endif %}
+                            {% if artist_info.count %}
+                                <li><strong>Number of Songs: </strong><span>{{ artist_info.count }}</span></li>
+                            {% endif %}
+                            {% if duration %}
+                                <li><strong>Avg. Song Duration: </strong><span>{{ duration }} </span></li>
+                            {% endif %}
+                            {% if artist_info.tempo %}
+                                <li><strong>Avg. Tempo: </strong><span>{{ artist_info.tempo|slice:":6" }} bpm</span>
+                                </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -56,7 +72,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="song-details-box">
-                                <h3>Stats</h3>
+                                <h3><i class="fas fa-chart-pie"></i> Stats</h3>
                                 <div class="artist-details">
                                     <canvas id="pie-chart"></canvas>
                                 </div>
@@ -64,72 +80,28 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="song-details-box">
-                                <h3>Top Songs</h3>
+                                <h3><i class="fas fa-fire"></i> Top Songs</h3>
                                 <!-- song -->
-                                <div class="song-item">
-                                    <div class="row">
-                                        <div class="col-xl-5 col-lg-12 col-md-5">
-                                            <div class="song-info-box">
-                                                <img src="{% static 'img/songs/1.jpg' %}" alt="">
-                                                <div class="song-info">
-                                                    <h4>Jennifer Brown</h4>
-                                                    <p>One Night in Ibiza</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-7 col-lg-12 col-md-7">
-                                            <div class="single_player_container">
-                                                <div class="single_player">
-                                                    <div class="jp-jplayer jplayer" data-ancestor=".jp_container_1"
-                                                         data-url="{% static 'music-files/1.mp3' %}"></div>
-                                                    <div class="jp-audio jp_container_1" role="application"
-                                                         aria-label="media player">
-                                                        <div class="jp-gui jp-interface">
-
-                                                            <!-- Player Controls -->
-                                                            <div class="player_controls_box">
-                                                                <button class="jp-prev player_button"
-                                                                        tabindex="0"></button>
-                                                                <button class="jp-play player_button"
-                                                                        tabindex="0"></button>
-                                                                <button class="jp-next player_button"
-                                                                        tabindex="0"></button>
-                                                                <button class="jp-stop player_button"
-                                                                        tabindex="0"></button>
-                                                            </div>
-                                                            <!-- Progress Bar -->
-                                                            <div class="player_bars">
-                                                                <div class="jp-progress">
-                                                                    <div class="jp-seek-bar">
-                                                                        <div>
-                                                                            <div class="jp-play-bar">
-                                                                                <div class="jp-current-time"
-                                                                                     role="timer" aria-label="time">0:00
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="jp-duration ml-auto" role="timer"
-                                                                     aria-label="duration">00:00
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="jp-no-solution">
-                                                            <span>Update Required</span>
-                                                            To play the media you will need to either update your
-                                                            browser to a recent version or update your <a
-                                                                href="http://get.adobe.com/flashplayer/"
-                                                                target="_blank">Flash plugin</a>
-                                                        </div>
+                                {% for song, songInfo in most_popular_songs_info.items %}
+                                    <div class="song-item">
+                                        <div class="row">
+                                            <div class="col-xl-5 col-lg-12 col-md-5">
+                                                <div class="song-info-box">
+                                                    <img src="{% static 'img/songs/1.jpg' %}" alt="">
+                                                    <div class="song-info">
+                                                        <h4>
+                                                            <a href="{% url 'song' song|cut:'http://SpotifyStats.com/song/' %}"
+                                                               style="color:#0a183d">{{ songInfo.name }}</a></h4>
+                                                        <p><i class="fas fa-fire"></i><b> Global
+                                                            Popularity: </b>{{ songInfo.popularity }}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- song -->
-                                <div class="song-item">
+                                    </div>
+                                    <!-- song -->
+                                    <div class="song-item">
                                     <div class="row">
                                         <div class="col-xl-5 col-lg-12 col-md-5">
                                             <div class="song-info-box">
@@ -143,59 +115,35 @@
                                         <div class="col-xl-7 col-lg-12 col-md-7">
                                             <div class="single_player_container">
                                                 <div class="single_player row">
-{#                                                    <div class="jp-jplayer jplayer" data-ancestor=".jp_container_2"#}
-{#                                                         data-url="{% static 'music-files/2.mp3' %}"></div>#}
                                                     <div class="col" id="player" style="display: none;"></div>
-{#                                                    <div class="jp-audio jp_container_2" role="application"#}
-{#                                                         aria-label="media player">#}
-{#                                                        <div class="jp-gui jp-interface">#}
 
-                                                            <!-- Player Controls -->
-                                                            <div class="player_controls_box col">
-                                                                <button id="play" class="jp-play player_button" type="button" onclick="playVideo('3Ba_WoSZXvw')"></button>
-                                                                <button id="pause" class="jp-stop player_button" type="button" onclick="pauseVideo()"></button>
-                                                            </div>
-                                                            <!-- Progress Bar -->
-                                                            <div class="player_bars row">
-{#                                                                <div class="jp-progress">#}
-{#                                                                    <div class="jp-seek-bar">#}
-{#                                                                        <div>#}
-{#                                                                            <div class="jp-play-bar">#}
-{#                                                                                <div class="jp-current-time"#}
-{#                                                                                     role="timer" aria-label="time">0:00#}
-{#                                                                                </div>#}
-{#                                                                            </div>#}
-{#                                                                        </div>#}
-{#                                                                    </div>#}
-{#                                                                </div>#}
-{#                                                                <div class="jp-duration ml-auto" role="timer"#}
-{#                                                                     aria-label="duration">00:00#}
-{#                                                                </div>#}
-                                                                <div class="col-sm-2" id="curr_time">0:00</div>
-                                                                <div class="col-sm-8">
-                                                                    <div class="w3-border">
-                                                                        <div id="progress" class="w3-grey" style="height:1px;width:0%"></div>
-                                                                    </div>
+                                                    <!-- Player Controls -->
+                                                    <div class="player_controls_box col">
+                                                        <button id="play" class="jp-play player_button" type="button"
+                                                                onclick="playVideo('3Ba_WoSZXvw')"></button>
+                                                        <button id="pause" class="jp-stop player_button" type="button"
+                                                                onclick="pauseVideo()"></button>
+                                                    </div>
+                                                    <!-- Progress Bar -->
+                                                    <div class="player_bars row">
+                                                        <div class="col-sm-2" id="curr_time">0:00</div>
+                                                        <div class="col-sm-8">
+                                                            <div class="w3-border">
+                                                                <div id="progress" class="w3-grey"
+                                                                     style="height:1px;width:0%">
                                                                 </div>
-
-                                                                <div  class="col-sm-2" id="duration">0:00</div>
-
                                                             </div>
                                                         </div>
-{#                                                        <div class="jp-no-solution">#}
-{#                                                            <span>Update Required</span>#}
-{#                                                            To play the media you will need to either update your#}
-{#                                                            browser to a recent version or update your <a#}
-{#                                                                href="http://get.adobe.com/flashplayer/"#}
-{#                                                                target="_blank">Flash plugin</a>#}
-{#                                                        </div>#}
-{#                                                    </div>#}
-{#                                                </div>#}
+
+                                                        <div class="col-sm-2" id="duration">0:00</div>
+
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                {% endfor %}
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -209,13 +157,13 @@
             type: 'polarArea',
             data: {
                 datasets: [{
-                    data: {{ data|safe }},
+                    data: {{ data| safe }},
                     backgroundColor: [
                         '#FAB314', '#717B86', '#08192D', '#E6E8EA', '#FF005A'
                     ],
                     label: 'Population'
                 }],
-                labels: {{ labels|safe }}
+                labels: {{ labels | safe }}
             },
             options: {
                 responsive: true

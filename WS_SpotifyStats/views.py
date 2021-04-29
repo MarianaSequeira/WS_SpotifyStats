@@ -1,3 +1,5 @@
+from builtins import print
+import math
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from WS_SpotifyStats.data_accessor import *
@@ -16,11 +18,11 @@ def home(request):
     return render(request, 'index.html', tparams)
 
 
-def song_page(request):
+def song_page(request, id):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
 
-    res = describe_entity("http://SpotifyStats.com/song/2DFRFqWNahKtFD112H2iEZ")
+    res = describe_entity(basename + 'song/' + id)
 
     tparams = {
         'res': res,
@@ -37,6 +39,17 @@ def artist_page(request, id):
 
     res = get_artist_genres(artist_info['name'])
     artist_genre_info = get_info(res)
+
+    res = get_most_popular_songs_of_artist(basename + 'artist/' + id)
+    most_popular_songs = get_info(res)
+
+    most_popular_songs_info = dict()
+    for song in most_popular_songs.keys():
+        print(song)
+        most_popular_songs_info[song] = get_info(describe_entity(song))
+
+    print("\n")
+    print(most_popular_songs_info)
 
     labels = []
     data = []
@@ -62,14 +75,20 @@ def artist_page(request, id):
     except Exception as e:
         pass
 
+    duration_ms = float(artist_info['duration_ms'])
+    min = math.floor(duration_ms / 60000)
+    seg = math.floor(duration_ms % 60000 / 1000) ;
+
     tparams = {
         'id': id,
         'res': res,
         'artist_info': artist_info,
         'artist_genre_info': artist_genre_info,
+        'most_popular_songs_info': most_popular_songs_info,
         'labels': labels,
         'summary': summary,
         'data': data,
+        'duration': str(min) + ' min and ' + str(seg) + ' sec'
     }
 
     return render(request, 'artistPage.html', tparams)
