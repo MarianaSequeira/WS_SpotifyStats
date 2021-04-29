@@ -36,19 +36,33 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="song-details-box">
-                        <h3>Song Details</h3>
+                        <h3><i class="fas fa-guitar"></i> Artist Details</h3>
                         <ul>
-                            <li><strong>Genre:</strong>
-                                <span>
-                                    {% for k, v in artist_genre_info.items %}
-                                        <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/genre/' %}">{{ v|capfirst }}</a>
-                                        {% if forloop.counter != artist_genre_info|length %}, {% endif %}
-                                    {% endfor %}
-                                </span>
-                            </li>
-                            <li><strong>Tags:</strong><span>quitar, piano, music, electronic music, minimal, chill music, pop, cultural, live, popular</span>
-                            </li>
-                            <li><strong>Instruments:</strong><span>quitar, piano, drums, bass</span></li>
+                            {% if artist_genre_info.keys|length > 0 %}
+                                <li>
+                                    <strong>Genre:</strong>
+                                    <span>
+                                        {% for k, v in artist_genre_info.items %}
+                                            <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/genre/' %}">{{ v|capfirst }}</a>
+                                            {% if forloop.counter != artist_genre_info|length %}, {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </li>
+                            {% endif %}
+                            {% if artist_info.popularity %}
+                                <li>
+                                    <strong>Global Popularity:</strong><span> {{ artist_info.popularity|slice:":6" }}</span>
+                                </li>
+                            {% endif %}
+                            {% if artist_info.count %}
+                                 <li><strong>Number of Songs: </strong><span>{{ artist_info.count}}</span></li>
+                            {% endif %}
+                            {% if duration %}
+                                 <li><strong>Avg. Song Duration: </strong><span>{{ duration }} </span></li>
+                            {% endif %}
+                            {% if artist_info.tempo %}
+                                 <li><strong>Avg. Tempo: </strong><span>{{ artist_info.tempo|slice:":6" }} bpm</span></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -56,7 +70,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="song-details-box">
-                                <h3>Stats</h3>
+                                <h3><i class="fas fa-chart-pie"></i> Stats</h3>
                                 <div class="artist-details">
                                     <canvas id="pie-chart"></canvas>
                                 </div>
@@ -73,9 +87,8 @@
                                                 <div class="song-info-box">
                                                     <img src="{% static 'img/songs/1.jpg' %}" alt="">
                                                     <div class="song-info">
-                                                        <h4>{{ songInfo.name }}</h4>
+                                                        <h4><a href="{% url 'song' song|cut:'http://SpotifyStats.com/song/' %}" style="color:#0a183d">{{ songInfo.name }}</a></h4>
                                                         <p><i class="fas fa-fire"></i><b> Global Popularity: </b>{{ songInfo.popularity }}</p>
-
                                                     </div>
                                                 </div>
                                             </div>
