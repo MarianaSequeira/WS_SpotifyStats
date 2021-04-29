@@ -1,6 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from WS_SpotifyStats.data_accessor import *
+import wikipedia
 
 basename = "http://SpotifyStats.com/"
 
@@ -54,6 +55,12 @@ def artist_page(request, id):
 
     labels.append('Valence')
     data.append("{:.2f}".format(float(artist_info.get('valence'))))
+    summary = "No artist information available"
+
+    try:
+        summary = wikipedia.summary(artist_info['name'], chars=400)
+    except Exception as e:
+        pass
 
     tparams = {
         'id': id,
@@ -61,6 +68,7 @@ def artist_page(request, id):
         'artist_info': artist_info,
         'artist_genre_info': artist_genre_info,
         'labels': labels,
+        'summary': summary,
         'data': data,
     }
 

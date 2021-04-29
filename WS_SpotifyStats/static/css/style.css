@@ -967,7 +967,7 @@ Category page
 }
 
 .player_bars {
-	width: calc(100% - 145px);
+	width: calc(100% - 72px);
 	position: relative;
 	padding-top: 8px;
 }
