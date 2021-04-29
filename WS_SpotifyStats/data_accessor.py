@@ -177,10 +177,10 @@ def get_most_popular_songs_of_artist(artist_uri):
     query = f"""{PREFIXES}
     select distinct * 
     where {{
-        ?s pred:artists {artist_uri} .
+        ?s pred:artists <{artist_uri}> .
         ?s pred:popularity ?pop
     }}  
-    ORDER BY DESC(?pop) LIMIT 10"""
+    ORDER BY DESC(?pop) LIMIT 3"""
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
@@ -195,7 +195,7 @@ def get_songs_by_artist(artist_uri):
     query = f"""{PREFIXES}
     select distinct * 
     where {{
-        ?s pred:artists {artist_uri} .
+        ?s pred:artists <{artist_uri}> .
     }}"""
     payload_query = {"query": query}
 
@@ -219,4 +219,4 @@ def describe_entity(uri):
     return res['results']['bindings']
 
 
-print(describe_entity("http://SpotifyStats.com/song/2DFRFqWNahKtFD112H2iEZ"))
+print(get_most_popular_songs_of_artist("http://SpotifyStats.com/artist/1"))

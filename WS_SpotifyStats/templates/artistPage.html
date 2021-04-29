@@ -64,133 +64,73 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="song-details-box">
-                                <h3>Top Songs</h3>
+                                <h3><i class="fas fa-fire"></i> Top Songs</h3>
                                 <!-- song -->
-                                <div class="song-item">
-                                    <div class="row">
-                                        <div class="col-xl-5 col-lg-12 col-md-5">
-                                            <div class="song-info-box">
-                                                <img src="{% static 'img/songs/1.jpg' %}" alt="">
-                                                <div class="song-info">
-                                                    <h4>Jennifer Brown</h4>
-                                                    <p>One Night in Ibiza</p>
+                                {% for song, songInfo in most_popular_songs_info.items %}
+                                    <div class="song-item">
+                                        <div class="row">
+                                            <div class="col-xl-5 col-lg-12 col-md-5">
+                                                <div class="song-info-box">
+                                                    <img src="{% static 'img/songs/1.jpg' %}" alt="">
+                                                    <div class="song-info">
+                                                        <h4>{{ songInfo.name }}</h4>
+                                                        <p><i class="fas fa-fire"></i><b> Global Popularity: </b>{{ songInfo.popularity }}</p>
+
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-xl-7 col-lg-12 col-md-7">
-                                            <div class="single_player_container">
-                                                <div class="single_player">
-                                                    <div class="jp-jplayer jplayer" data-ancestor=".jp_container_1"
-                                                         data-url="{% static 'music-files/1.mp3' %}"></div>
-                                                    <div class="jp-audio jp_container_1" role="application"
-                                                         aria-label="media player">
-                                                        <div class="jp-gui jp-interface">
+                                            <div class="col-xl-7 col-lg-12 col-md-7">
+                                                <div class="single_player_container">
+                                                    <div class="single_player">
+                                                        <div class="jp-jplayer jplayer" data-ancestor=".jp_container_1"
+                                                             data-url="{% static 'music-files/1.mp3' %}"></div>
+                                                        <div class="jp-audio jp_container_1" role="application"
+                                                             aria-label="media player">
+                                                            <div class="jp-gui jp-interface">
 
-                                                            <!-- Player Controls -->
-                                                            <div class="player_controls_box">
-                                                                <button class="jp-prev player_button"
-                                                                        tabindex="0"></button>
-                                                                <button class="jp-play player_button"
-                                                                        tabindex="0"></button>
-                                                                <button class="jp-next player_button"
-                                                                        tabindex="0"></button>
-                                                                <button class="jp-stop player_button"
-                                                                        tabindex="0"></button>
-                                                            </div>
-                                                            <!-- Progress Bar -->
-                                                            <div class="player_bars">
-                                                                <div class="jp-progress">
-                                                                    <div class="jp-seek-bar">
-                                                                        <div>
-                                                                            <div class="jp-play-bar">
-                                                                                <div class="jp-current-time"
-                                                                                     role="timer" aria-label="time">0:00
+                                                                <!-- Player Controls -->
+                                                                <div class="player_controls_box">
+                                                                    <button class="jp-prev player_button"
+                                                                            tabindex="0"></button>
+                                                                    <button class="jp-play player_button"
+                                                                            tabindex="0"></button>
+                                                                    <button class="jp-next player_button"
+                                                                            tabindex="0"></button>
+                                                                    <button class="jp-stop player_button"
+                                                                            tabindex="0"></button>
+                                                                </div>
+                                                                <!-- Progress Bar -->
+                                                                <div class="player_bars">
+                                                                    <div class="jp-progress">
+                                                                        <div class="jp-seek-bar">
+                                                                            <div>
+                                                                                <div class="jp-play-bar">
+                                                                                    <div class="jp-current-time"
+                                                                                         role="timer" aria-label="time">0:00
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="jp-duration ml-auto" role="timer"
-                                                                     aria-label="duration">00:00
+                                                                    <div class="jp-duration ml-auto" role="timer"
+                                                                         aria-label="duration">00:00
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="jp-no-solution">
-                                                            <span>Update Required</span>
-                                                            To play the media you will need to either update your
-                                                            browser to a recent version or update your <a
-                                                                href="http://get.adobe.com/flashplayer/"
-                                                                target="_blank">Flash plugin</a>
+                                                            <div class="jp-no-solution">
+                                                                <span>Update Required</span>
+                                                                To play the media you will need to either update your
+                                                                browser to a recent version or update your <a
+                                                                    href="http://get.adobe.com/flashplayer/"
+                                                                    target="_blank">Flash plugin</a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- song -->
-                                <div class="song-item">
-                                    <div class="row">
-                                        <div class="col-xl-5 col-lg-12 col-md-5">
-                                            <div class="song-info-box">
-                                                <img src="{% static 'img/songs/2.jpg' %}" alt="">
-                                                <div class="song-info">
-                                                    <h4>Michael Smith</h4>
-                                                    <p>Dream in colors</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-7 col-lg-12 col-md-7">
-                                            <div class="single_player_container">
-                                                <div class="single_player">
-                                                    <div class="jp-jplayer jplayer" data-ancestor=".jp_container_2"
-                                                         data-url="{% static 'music-files/2.mp3' %}"></div>
-                                                    <div class="jp-audio jp_container_2" role="application"
-                                                         aria-label="media player">
-                                                        <div class="jp-gui jp-interface">
-
-                                                            <!-- Player Controls -->
-                                                            <div class="player_controls_box">
-                                                                <button class="jp-prev player_button"
-                                                                        tabindex="0"></button>
-                                                                <button class="jp-play player_button"
-                                                                        tabindex="0"></button>
-                                                                <button class="jp-next player_button"
-                                                                        tabindex="0"></button>
-                                                                <button class="jp-stop player_button"
-                                                                        tabindex="0"></button>
-                                                            </div>
-                                                            <!-- Progress Bar -->
-                                                            <div class="player_bars">
-                                                                <div class="jp-progress">
-                                                                    <div class="jp-seek-bar">
-                                                                        <div>
-                                                                            <div class="jp-play-bar">
-                                                                                <div class="jp-current-time"
-                                                                                     role="timer" aria-label="time">0:00
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="jp-duration ml-auto" role="timer"
-                                                                     aria-label="duration">00:00
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="jp-no-solution">
-                                                            <span>Update Required</span>
-                                                            To play the media you will need to either update your
-                                                            browser to a recent version or update your <a
-                                                                href="http://get.adobe.com/flashplayer/"
-                                                                target="_blank">Flash plugin</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
