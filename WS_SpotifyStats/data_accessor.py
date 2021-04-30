@@ -20,7 +20,10 @@ def get_most_popular_songs():
     query = f"""{PREFIXES}
     select distinct * where {{
         ?s pred:type type:song .
-        ?s pred:popularity ?pop
+        ?s pred:name ?name .
+        ?s pred:popularity ?pop .
+        ?s pred:artists ?artist . 
+        ?artist pred:name ?artist_name
     }}  ORDER BY DESC(?pop) LIMIT 100
     """
     payload_query = {"query": query}
@@ -48,13 +51,16 @@ def get_song_count():
     return res['results']['bindings']
 
 
-def get_song_by_partial_name(name):
+def get_songs_by_partial_name(name):
     query = f"""{PREFIXES}
     select distinct * where {{
         ?s pred:type type:song .
         ?s pred:name ?name .
-        filter regex(?name,"{name}", "i")
-    }} limit 100 """
+        ?s pred:popularity ?pop .
+        ?s pred:artists ?artist . 
+        ?artist pred:name ?artist_name
+        filter regex(?name,"{name}", "i") 
+    }} ORDER BY DESC(?pop) limit 100 """
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)

@@ -65,6 +65,28 @@ def song_page(request, id):
     return render(request, 'songPage.html', tparams)
 
 
+def songs_page(request):
+    """Renders the home page."""
+    assert isinstance(request, HttpRequest)
+
+    if request.method == 'POST':
+        search = request.POST['search']
+        songs = get_songs_by_partial_name(search)
+        title = "Songs with '" + search + "'"
+    else:
+        songs = get_most_popular_songs()
+        title = "TOP 100"
+
+    print(songs)
+
+    tparams = {
+        'ola': "ola",
+        'songs': songs,
+        'title': title,
+    }
+    return render(request, 'songsPage.html', tparams)
+
+
 def artist_page(request, id):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)

@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+
+    <section class="help-section spad pt-0">
+        <div style="margin-left: 10%; margin-right: 10%">
+            <div class="row" style="padding-top: 50px">
+                <div class="col-lg-6 align-content-start">
+                    <div class="section-title mb-0 pb-4">
+                        <h2 style="font-size: 50px">{{ title}}</h2>
+                    </div>
+                </div>
+                <div class="col-lg-6 align-content-end">
+                    <div class="d-flex h-100 align-items-end">
+                        <form id="searchForm" action="." method="POST" class="search-form">
+                            {% csrf_token %}
+                            <input type="text" name="search" placeholder="Hit it">
+                            <button >Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="row" style="margin-left: 10%; margin-right: 10%">
+        {% for song in songs %}
+            {% if forloop.counter > 30 %}
+
+            {% endif %}
+            <div class="col-4 song"
+                {% if forloop.counter > 15 %}
+                    style="padding-left: 0; margin-bottom: 50px; display: none"
+                {% else %}
+                    style="padding-left: 0; margin-bottom: 50px;"
+                {% endif %}
+            >
+                <div class="song-info-box" >
+                    <img src="{% static 'img/songs/1.jpg'  %}" alt="">
+                    <div class="song-info" style="padding-top: 2%">
+                        <a href="{% url 'song'  song.s.value|cut:'http://SpotifyStats.com/song/' %}" ><h4>{{ song.name.value}}</h4></a>
+                        <p><b><i class="fas fa-microphone-alt"></i> Artist: </b><a href="{% url 'artist'  song.artist.value|cut:'http://SpotifyStats.com/artist/' %}" >{{ song.artist_name.value }}</a></p>
+                        <p><b><i class="fas fa-fire"></i> Global Popularity: </b>{{ song.pop.value}}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col align-self-center" style="text-align: center; padding-bottom: 60px">
+                <button onclick=showAll() style="background: #fc0254; height: 60px;  min-width: 167px; right: 0; top: 0; border: none; border-radius: 80px; color: #fff; font-size: 15px;">Show All</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAll() {
+            console.log()
+            var x = document.getElementsByClassName("song");
+            Array.prototype.forEach.call(x, function(el) {
+
+                // Do stuff here
+                el.style.display = null
+            });
+        }
+    </script>
+{% endblock content %}
+
+
