@@ -60,7 +60,25 @@ def get_songs_by_partial_name(name):
         ?s pred:artists ?artist . 
         ?artist pred:name ?artist_name
         filter regex(?name,"{name}", "i") 
-    }} ORDER BY DESC(?pop) limit 100 """
+    }} ORDER BY DESC(?pop) limit 102 """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+def get_genre_by_partial_name(name):
+    query = f"""{PREFIXES}
+    select distinct * where {{
+        ?s pred:type type:genre .
+        ?s pred:name ?name .
+        ?s pred:popularity ?pop .
+        filter regex(?name,"{name}", "i") 
+    }} ORDER BY DESC(?pop) limit 102 """
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
@@ -90,11 +108,13 @@ def get_artist_by_partial_name(name):
 
 def get_artist_with_genre(genre):
     query = f"""{PREFIXES}
-    select distinct ?s ?name where {{
+    select distinct * where {{
         ?s pred:type type:artist .
         ?s pred:genre genre:{genre} .
-        ?s pred:name ?name
-    }}"""
+        ?s pred:name ?name .
+        ?s pred:popularity ?pop .
+        ?s pred:count ?count
+    }} ORDER BY DESC(?pop) limit 4"""
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
@@ -186,7 +206,7 @@ def get_most_popular_songs_of_artist(artist_uri):
         ?s pred:artists <{artist_uri}> .
         ?s pred:popularity ?pop
     }}  
-    ORDER BY DESC(?pop) LIMIT 3"""
+    ORDER BY DESC(w3:double(?pop)) LIMIT 3"""
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
@@ -228,6 +248,26 @@ def get_artist_name_by_id(id):
     res = json.loads(res)
 
     return res['results']['bindings']
+
+
+def get_all_genres():
+    query = f"""{PREFIXES}
+    select distinct *
+    where {{
+        ?s pred:type type:genre .
+        ?s pred:name ?name .
+        ?s pred:popularity ?pop .
+    }}  
+    ORDER BY DESC(w3:double(?pop)) limit 102"""
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
 
 def describe_entity(uri):
     query = f"""SELECT * WHERE {{ <{uri}> ?p ?o }}"""
