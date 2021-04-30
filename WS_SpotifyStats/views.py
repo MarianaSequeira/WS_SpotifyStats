@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from WS_SpotifyStats.data_accessor import *
 import wikipedia
+from youtube_search import YoutubeSearch
 
 basename = "http://SpotifyStats.com/"
 
@@ -79,9 +80,11 @@ def artist_page(request, id):
     most_popular_songs = get_info(res)
 
     most_popular_songs_info = dict()
+
     for song in most_popular_songs.keys():
-        print(song)
-        most_popular_songs_info[song] = get_info(describe_entity(song))
+        song_info = get_info(describe_entity(song))
+        most_popular_songs_info[song] = song_info
+
 
     print("\n")
     print(most_popular_songs_info)
@@ -154,7 +157,5 @@ def get_info(res):
                 stable_key = r[key]['value'].replace('http://SpotifyStats.com/pred/', '')
                 continue
             info[stable_key] = r[key]['value'].replace('http://SpotifyStats.com/pred/', '')
-
-    print(info)
     return info
 

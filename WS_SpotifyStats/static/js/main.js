@@ -61,61 +61,59 @@ $(window).on('load', function() {
 //##########################################
 //##########################################
 
-// daqui para a frente
-
-var player;
-// This code loads the IFrame Player API code asynchronously. This is the Youtube-recommended script loading method
 var tag = document.createElement("script");
 
 tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName("script")[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-
-// //  This function is called by YouTube once the the API is ready.It creates an &lt;iframe&gt; and sets up the video player inside.
-// function onYouTubeIframeAPIReady() {
-
-// }
-
-// The API will call this function when the video player is ready (in this case, start playing the video).
 function onPlayerReady(event) {
-    event.target.playVideo();
+	event.target.playVideo();
+	check_time(event.target.getVideoUrl().split("=")[1])
 }
 
-function check_time() {
-	var prog = player.getCurrentTime()/player.getDuration() * 100;
-	console.log(prog + "%");
-	$('#progress').css('width', prog+"%");
-	$('#curr_time').text(Math.floor(player.getCurrentTime()));
-	$('#duration').text(player.getDuration());
-	setTimeout(check_time, 1000);
+function check_time(yt_id) {
+	var prog = dict[yt_id].getCurrentTime()/dict[yt_id].getDuration() * 100;
+	$('#progress'+yt_id).css('width', prog+"%");
+	var time = dict[yt_id].getCurrentTime().toFixed(2);
+	var minutes = Math.floor(time / 60);
+	var seconds = time - minutes * 60;
+	var formatted = minutes.toFixed(0).toString().padStart(2, '0') + ':' + seconds.toFixed(0).toString().padStart(2, '0');
+	$('#curr_time'+yt_id).text(formatted);
+	time = dict[yt_id].getDuration().toFixed(2)
+	minutes = Math.floor(time / 60);
+	seconds = time - minutes * 60;
+	formatted = minutes.toFixed(0).toString().padStart(2, '0') + ':' + seconds.toFixed(0).toString().padStart(2, '0');
+	$('#duration'+yt_id).text(formatted);
+	console.log('#progress'+yt_id + " -> " +dict[yt_id].getPlayerState());
+	setTimeout(check_time, 1000, yt_id);
+
 }
 
-// console.log(document.getElementById("play"));
-var init=false;
 function playVideo(video_id) {
-	if(!init){
-		player = new YT.Player("player", {
-			height: "320",
-			width: "320",
-			videoId: video_id,
-			events: {
-				// API event handlers<
-				onReady: onPlayerReady,
-				onStateChange: check_time
-			}
+
+	if(video_id in dict){
+		dict[video_id].pauseVideo();
+		dict[video_id].playVideo();
+	}else{
+		let player = new YT.Player("player"+video_id, {
+		height: "320",
+		width: "320",
+		videoId: video_id,
+		playerVars: {
+		  'playsinline': 1
+		},
+		events: {
+			onReady: onPlayerReady
+		}
 		});
-		init=true;
+		dict[video_id] = player
 	}
-
-    player.playVideo();
-
-}
-function pauseVideo() {
-    player.pauseVideo();
 }
 
+function pauseVideo(video_id) {
+    dict[video_id].pauseVideo();
+}
 
-
-
+var dict = {};
 
