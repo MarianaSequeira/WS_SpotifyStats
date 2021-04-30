@@ -66,6 +66,28 @@ def song_page(request, id):
     return render(request, 'songPage.html', tparams)
 
 
+def songs_page(request):
+    """Renders the home page."""
+    assert isinstance(request, HttpRequest)
+
+    if request.method == 'POST':
+        search = request.POST['search']
+        songs = get_songs_by_partial_name(search)
+        title = "Songs with '" + search + "'"
+    else:
+        songs = get_most_popular_songs()
+        title = "TOP 100"
+
+    print(songs)
+
+    tparams = {
+        'ola': "ola",
+        'songs': songs,
+        'title': title,
+    }
+    return render(request, 'songsPage.html', tparams)
+
+
 def artist_page(request, id):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
@@ -140,12 +162,41 @@ def genre_page(request, id):
     res = describe_entity(basename + 'genre/' + id)
     genre_info = get_info(res)
 
+    artists = get_artist_with_genre(id)
+
+    print(artists)
+
     tparams = {
         'id': id,
-        'genre_info':genre_info
+        'genre_info':genre_info,
+        'artists':artists
 
     }
     return render(request, 'genrePage.html', tparams)
+
+
+def genres_page(request):
+    """Renders the home page."""
+    assert isinstance(request, HttpRequest)
+
+    print(request)
+
+    if request.method == 'POST':
+        search = request.POST['search']
+        genres = get_genre_by_partial_name(search)
+        title = "Genres with '" + search + "'"
+    else:
+        genres = get_all_genres()
+        title = "Genres"
+
+    print(genres)
+
+    tparams = {
+        'ola': "ola",
+        'title': title,
+        'genres': genres
+    }
+    return render(request, 'genresPage.html', tparams)
 
 
 def get_info(res):

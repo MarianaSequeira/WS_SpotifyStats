@@ -3,15 +3,15 @@
 {% block content %}
 
     <section class="player-section set-bg" data-setbg="{% static 'img/player-bg.jpg' %}">
-        <div class="player-box">
-            <div class="tarck-thumb-warp">
+        <div class="player-box" style="padding-left: 66px">
+            <div class="tarck-thumb-warp" >
                 <div class="tarck-thumb">
                     <img src="{% static 'img/wave-thumb.jpg' %}" alt="">
                     <button onclick="wavesurfer.playPause();" class="wp-play"></button>
 
                 </div>
             </div>
-            <div class="wave-player-warp">
+            <div class="wave-player-warp" style="padding-top: 0px">
                 <div class="row">
                     <div class="col-lg-8">
                         <div class="wave-player-info">
