@@ -281,4 +281,30 @@ def describe_entity(uri):
     return res['results']['bindings']
 
 
-print(get_most_popular_songs_of_artist("http://SpotifyStats.com/artist/1"))
+def get_most_popular_songs_by_genre(genre_id):
+    print(genre_id)
+    query = f"""{PREFIXES}
+    select distinct *
+    where {{
+        ?s pred:artists ?art .
+        ?art pred:genre genre:{genre_id} .
+        ?s pred:popularity ?pop .
+        ?s pred:name ?name .
+        ?s pred:name ?name .
+        ?art pred:name ?artist_name . 
+        OPTIONAL {{ ?s pred:yt_id ?yt_id . }}
+        OPTIONAL {{ ?s pred:cover_art ?cover_art . }}
+    }}  
+    ORDER BY DESC(w3:double(?pop)) limit 5"""
+
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+# print(get_most_popular_songs_of_artist("http://SpotifyStats.com/artist/1"))

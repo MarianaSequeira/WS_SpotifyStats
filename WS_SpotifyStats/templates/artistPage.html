@@ -6,9 +6,11 @@
         <div class="player-box" style="padding-left: 66px">
             <div class="tarck-thumb-warp" >
                 <div class="tarck-thumb">
-                    <img src="{% static 'img/wave-thumb.jpg' %}" alt="">
-                    <button onclick="wavesurfer.playPause();" class="wp-play"></button>
-
+                    {% if not artist_info.face_photo %}
+                        <img src="https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png" alt="">
+                    {% else %}
+                        <img src="{{ artist_info.face_photo }}" alt="">
+                    {% endif %}
                 </div>
             </div>
             <div class="wave-player-warp" style="padding-top: 0px">
@@ -90,7 +92,12 @@
                                         <div class="row">
                                             <div class="col-xl-5 col-lg-12 col-md-5">
                                                 <div class="song-info-box">
-                                                    <img src="{% static 'img/songs/1.jpg' %}" alt="">
+                                                    {% if not songInfo.cover_art %}
+                                                        <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/cd.png" alt="">
+                                                    {% else %}
+                                                        <img src="{{ songInfo.cover_art }}" alt="">
+                                                    {% endif %}
+
                                                     <div class="song-info">
                                                         <h4>
                                                             <a href="{% url 'song' song|cut:'http://SpotifyStats.com/song/' %}"

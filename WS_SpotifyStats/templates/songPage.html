@@ -10,8 +10,11 @@
                     <div class="row">
                         <div class="tarck-thumb-warp">
                             <div class="tarck-thumb">
-                                <img src="{% static 'img/wave-thumb.jpg' %}" alt="">
-                                <button onclick="wavesurfer.playPause();" class="wp-play"></button>
+                                {% if not song_info.cover_art %}
+                                    <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/cd.png" alt="">
+                                {% else %}
+                                    <img src="{{ song_info.cover_art }}" alt="">
+                                {% endif %}
                             </div>
                         </div>
                         <div class="wave-player-warp" style="padding-top: 0px">
@@ -113,10 +116,7 @@
 										<div class="jp-duration ml-auto" role="timer" aria-label="duration">00:00</div>
 									</div>
 								</div>
-								<div class="jp-no-solution">
-									<span>Update Required</span>
-									To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>
-								</div>
+
 							</div>
 						</div>
 					</div>
@@ -156,10 +156,7 @@
 										<div class="jp-duration ml-auto" role="timer" aria-label="duration">00:00</div>
 									</div>
 								</div>
-								<div class="jp-no-solution">
-									<span>Update Required</span>
-									To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>
-								</div>
+
 							</div>
 						</div>
 					</div>
@@ -199,10 +196,7 @@
 										<div class="jp-duration ml-auto" role="timer" aria-label="duration">00:00</div>
 									</div>
 								</div>
-								<div class="jp-no-solution">
-									<span>Update Required</span>
-									To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>
-								</div>
+
 							</div>
 						</div>
 					</div>
@@ -241,10 +235,6 @@
 										</div>
 										<div class="jp-duration ml-auto" role="timer" aria-label="duration">00:00</div>
 									</div>
-								</div>
-								<div class="jp-no-solution">
-									<span>Update Required</span>
-									To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>
 								</div>
 							</div>
 						</div>

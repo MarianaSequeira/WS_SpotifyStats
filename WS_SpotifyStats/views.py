@@ -4,7 +4,6 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from WS_SpotifyStats.data_accessor import *
 import wikipedia
-from youtube_search import YoutubeSearch
 
 basename = "http://SpotifyStats.com/"
 
@@ -164,13 +163,19 @@ def genre_page(request, id):
 
     artists = get_artist_with_genre(id)
 
-    print(artists)
+    song_ids = get_most_popular_songs_by_genre(id)
 
+    songs = dict()
+    for song in song_ids:
+        res = describe_entity(song['s']['value'])
+        songs[song['s']['value']] = get_info(res)
+
+    print(songs)
     tparams = {
         'id': id,
         'genre_info':genre_info,
-        'artists':artists
-
+        'artists':artists,
+        'song_info':songs
     }
     return render(request, 'genrePage.html', tparams)
 
