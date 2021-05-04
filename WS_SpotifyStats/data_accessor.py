@@ -94,6 +94,7 @@ def get_artist_by_partial_name(name):
     select distinct * where {{
         ?s pred:type type:artist .
         ?s pred:name ?name .
+        ?s pred:popularity ?pop .
         filter regex(?name,"{name}", "i")
     }} limit 100 """
     payload_query = {"query": query}
@@ -207,6 +208,24 @@ def get_most_popular_songs_of_artist(artist_uri):
         ?s pred:popularity ?pop
     }}  
     ORDER BY DESC(w3:double(?pop)) LIMIT 3"""
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+def get_most_popular_artists():
+    query = f"""{PREFIXES}
+        select distinct * where {{
+            ?s pred:type type:artist .
+            ?s pred:name ?name .
+            ?s pred:popularity ?pop .
+        }}  ORDER BY DESC(?pop) LIMIT 100
+        """
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)

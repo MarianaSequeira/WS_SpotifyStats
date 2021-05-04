@@ -157,6 +157,25 @@ def artist_page(request, id):
     return render(request, 'artistPage.html', tparams)
 
 
+def artists_page(request):
+    """Renders the home page."""
+    assert isinstance(request, HttpRequest)
+
+    if request.method == 'POST':
+        search = request.POST['search']
+        artists = get_artist_by_partial_name(search)
+        title = "Artists with '" + search + "'"
+    else:
+        artists = get_most_popular_artists()
+        title = "TOP 100"
+
+    tparams = {
+        'artists': artists,
+        'title': title,
+    }
+    return render(request, 'artistsPage.html', tparams)
+
+
 def genre_page(request, id):
     res = describe_entity(basename + 'genre/' + id)
     genre_info = get_info(res)
