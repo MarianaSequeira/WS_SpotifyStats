@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+
+    <section class="help-section spad pt-0">
+        <div style="margin-left: 10%; margin-right: 10%">
+            <div class="row" style="padding-top: 50px">
+                <div class="col-lg-7 align-content-start">
+                    <div class="section-title mb-0 pb-4">
+                        <h2 style="font-size: 50px">{{ title}}</h2>
+                    </div>
+                </div>
+                <div class="col-lg-5 align-content-end">
+                    <div class="d-flex h-100 align-items-end">
+                        <form id="searchFormSong" action="." method="POST" class="search-form">
+                            {% csrf_token %}
+                            <input type="text" name="search" placeholder="Hit it">
+                            <button >Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="row" style="margin-left: 10%; margin-right: 10%">
+        {% for artist in artists %}
+            <div class="col-4 genre"
+                {% if forloop.counter > 15 %}
+                    style="margin-bottom: 50px; display: none; "
+                {% else %}
+                    style="margin-bottom: 50px;"
+                {% endif %}
+            >
+                <div class="song-info" style="padding-top: 2%; background: #d0d7db; text-align: center; border-radius: 40px; height: 100px; display: flex; justify-content: center; align-content: center; flex-direction: column;">
+                    <a href="{% url 'artist' artist.s.value|cut:'http://SpotifyStats.com/artist/' %}" ><h4>{{ artist.name.value|capfirst}}</h4></a>
+                    <p style="padding-bottom: 0; margin-bottom: 0; padding-top: 5px;"><b><i class="fas fa-fire"></i> Global Popularity: </b>{{ artist.pop.value|slice:":4"}}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col align-self-center" style="text-align: center; padding-bottom: 60px">
+                <button onclick=showAllArtists() style="background: #fc0254; height: 60px;  min-width: 167px; right: 0; top: 0; border: none; border-radius: 80px; color: #fff; font-size: 15px;">Show All</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAllArtists() {
+            var x = document.getElementsByClassName("genre");
+            console.log(x)
+            Array.prototype.forEach.call(x, function(el) {
+                // Do stuff here
+                el.style.display = null
+            });
+        }
+    </script>
+{% endblock content %}
+
+
