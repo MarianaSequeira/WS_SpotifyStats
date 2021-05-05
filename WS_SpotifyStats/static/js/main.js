@@ -86,15 +86,25 @@ function check_time(yt_id) {
 	formatted = minutes.toFixed(0).toString().padStart(2, '0') + ':' + seconds.toFixed(0).toString().padStart(2, '0');
 	$('#duration'+yt_id).text(formatted);
 	console.log('#progress'+yt_id + " -> " +dict[yt_id].getPlayerState());
-	setTimeout(check_time, 1000, yt_id);
+	if(dict[yt_id].getPlayerState() === -1){
+		window.open("https://www.youtube.com/watch?v="+yt_id, "_blank");
 
+	}
+	else{
+		setTimeout(check_time, 1000, yt_id);
+	}
 }
 
 function playVideo(video_id) {
 
 	if(video_id in dict){
-		dict[video_id].pauseVideo();
-		dict[video_id].playVideo();
+		if (dict[video_id].getPlayerState() === 1) {
+			dict[video_id].pauseVideo();
+		}else{
+			dict[video_id].pauseVideo();
+			dict[video_id].playVideo();
+		}
+
 	}else{
 		let player = new YT.Player("player"+video_id, {
 		height: "320",

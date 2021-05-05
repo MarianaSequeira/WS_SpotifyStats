@@ -23,8 +23,9 @@ def get_most_popular_songs():
         ?s pred:name ?name .
         ?s pred:popularity ?pop .
         ?s pred:artists ?artist . 
-        ?artist pred:name ?artist_name
-    }}  ORDER BY DESC(?pop) LIMIT 100
+        ?artist pred:name ?artist_name .
+        ?s pred:cover_art ?cover_art
+    }}  ORDER BY DESC(?pop) LIMIT 102
     """
     payload_query = {"query": query}
 
@@ -114,8 +115,9 @@ def get_artist_with_genre(genre):
         ?s pred:genre genre:{genre} .
         ?s pred:name ?name .
         ?s pred:popularity ?pop .
-        ?s pred:count ?count
-    }} ORDER BY DESC(?pop) limit 4"""
+        ?s pred:count ?count .
+        OPTIONAL {{ ?s pred:face_photo ?face_photo }}
+    }} ORDER BY DESC(w3:double(?pop)) limit 4"""
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
@@ -301,14 +303,12 @@ def describe_entity(uri):
 
 
 def get_most_popular_songs_by_genre(genre_id):
-    print(genre_id)
     query = f"""{PREFIXES}
     select distinct *
     where {{
         ?s pred:artists ?art .
         ?art pred:genre genre:{genre_id} .
         ?s pred:popularity ?pop .
-        ?s pred:name ?name .
         ?s pred:name ?name .
         ?art pred:name ?artist_name . 
         OPTIONAL {{ ?s pred:yt_id ?yt_id . }}
@@ -324,6 +324,29 @@ def get_most_popular_songs_by_genre(genre_id):
     res = json.loads(res)
 
     return res['results']['bindings']
+
+
+def get_similar_songs(song_id):
+    query = f"""{PREFIXES}
+    select * where {{ 
+        song:{song_id} pred:similar ?similar .
+        ?similar pred:artists ?art .
+        ?similar pred:name ?name .
+        ?art pred:name ?artist_name .
+        OPTIONAL{{ ?similar pred:yt_id ?yt_id}}
+        OPTIONAL{{ ?similar pred:cover_art ?cover_art}}
+    }}"""
+
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
 
 
 # print(get_most_popular_songs_of_artist("http://SpotifyStats.com/artist/1"))

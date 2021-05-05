@@ -34,7 +34,11 @@
                 {% endif %}
             >
                 <div class="song-info-box" >
-                    <img src="{% static 'img/songs/1.jpg'  %}" alt="">
+                    {% if not song.cover_art.value %}
+                        <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/cd.png" alt="">
+                    {% else %}
+                        <img src="{{ song.cover_art.value }}" alt="">
+                    {% endif %}
                     <div class="song-info" style="padding-top: 2%">
                         <a href="{% url 'song'  song.s.value|cut:'http://SpotifyStats.com/song/' %}" ><h4>{{ song.name.value}}</h4></a>
                         <p><b><i class="fas fa-microphone-alt"></i> Artist: </b><a href="{% url 'artist'  song.artist.value|cut:'http://SpotifyStats.com/artist/' %}" >{{ song.artist_name.value }}</a></p>

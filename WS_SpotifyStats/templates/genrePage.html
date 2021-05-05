@@ -6,10 +6,17 @@
     <!-- Category section -->
     <section class="category-section spad" style="padding-bottom: 0">
         <div class="container-fluid">
-            <div class="section-title">
-                <h2>{{ genre_info.name|capfirst }}</h2>
-                <h5 id="subtitle" style="padding-left: 1.5%; padding-top: 2%">TOP Artists and Songs</h5>
-            </div>
+            {% if genre_info.name|capfirst|length < 5%}
+                <div class="section-title" style="width: 400px">
+                    <h2>{{ genre_info.name|capfirst }}</h2>
+                    <h5 id="subtitle" style="padding-left: 1.5%; padding-top: 2%">TOP Artists and Songs</h5>
+                </div>
+            {% else %}
+                <div class="section-title">
+                    <h2>{{ genre_info.name|capfirst }}</h2>
+                    <h5 id="subtitle" style="padding-left: 1.5%; padding-top: 2%">TOP Artists and Songs</h5>
+                </div>
+            {% endif %}
             <div class="container">
                 <div class="category-links">
                     <a class="active" onclick=goToHere("all","artists","songs") id="all">Artist & Songs</a>
@@ -22,10 +29,10 @@
                     {% for artist in artists %}
                         <div class="col-md-3">
                             <div class="category-item">
-                               {% if not artist_info.face_photo %}
+                               {% if not artist.face_photo.value %}
                                     <img src="{% static  'img/playlist/9.jpg' %}" alt="">
                                {% else %}
-                                    <img src="{{ artist_info.face_photo }}" alt="">
+                                    <img src="{{ artist.face_photo.value }}" alt="">
                                {% endif %}
                                 <div class="ci-text">
                                     <a href="{% url 'artist' artist.s.value|cut:'http://SpotifyStats.com/artist/' %}">
@@ -47,49 +54,55 @@
     <section id="songsContent" class="songs-section">
         <div class="container">
 
-            {% for song, songInfo in song_info.items %}
+            {% for song in song_info %}
                 <!-- song -->
                 <div class="song-item">
+                    <div id="player{{ song.yt_id.value }}" style="display: none;"></div>
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="song-info-box">
-                                <img src="{% static  'img/songs/1.jpg' %}" alt="">
+                               {% if not song.cover_art.value %}
+                                    <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/cd.png" alt="" style="width: 70px; height: 70px">
+                               {% else %}
+                                    <img src="{{ song.cover_art.value }}" alt="">
+                               {% endif %}
                                 <div class="song-info">
-                                    <h4>Jennifer Brown</h4>
-                                    <p>One Night in Ibiza</p>
+                                    <a href="{% url 'song' song.s.value|cut:'http://SpotifyStats.com/song/' %}">
+                                        <h4>{{ song.name.value }}</h4>
+                                    </a>
+                                    <a href="{% url 'artist' song.art.value|cut:'http://SpotifyStats.com/artist/' %}">
+                                        <p>{{ song.artist_name.value }}</p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="single_player_container">
-                                <div class="single_player">
-                                    <div class="jp-jplayer jplayer" data-ancestor=".jp_container_1"
-                                         data-url="music-files/1.mp3"></div>
-                                    <div class="jp-audio jp_container_1" role="application" aria-label="media player">
-                                        <div class="jp-gui jp-interface">
-
-                                            <!-- Player Controls -->
-                                            <div class="player_controls_box">
-                                                <button class="jp-prev player_button" tabindex="0"></button>
-                                                <button class="jp-play player_button" tabindex="0"></button>
-                                                <button class="jp-next player_button" tabindex="0"></button>
-                                                <button class="jp-stop player_button" tabindex="0"></button>
+                                <div class="single_player row" style="padding-top: 0">
+                                    <!-- Player Controls -->
+                                    <div class="player_controls_box" style="width: 25%">
+                                        <button id="play" class="jp-play player_button"
+                                                type="button"
+                                                onclick="playVideo('{{ song.yt_id.value }}')"></button>
+                                        <button id="pause" class="jp-stop player_button"
+                                                type="button"player_controls_box
+                                                onclick="pauseVideo('{{ song.yt_id.value }}')"></button>
+                                    </div>
+                                    <!-- Progress Bar -->
+                                    <div class="player_bars" style="width: 75%; padding-left: 5%; padding-top: 4%">
+                                        <div class="row" >
+                                        <div class="w3-border" style="width: 100%">
+                                            <div id="progress{{ song.yt_id.value }}" class="w3-grey"
+                                                 style="height:1px;width:0%">
                                             </div>
-                                            <!-- Progress Bar -->
-                                            <div class="player_bars">
-                                                <div class="jp-progress">
-                                                    <div class="jp-seek-bar">
-                                                        <div>
-                                                            <div class="jp-play-bar">
-                                                                <div class="jp-current-time" role="timer" aria-label="time">
-                                                                    0:00
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="jp-duration ml-auto" role="timer" aria-label="duration">00:00
-                                                </div>
+                                        </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 1%">
+                                            <div class="col align-self-start" style="padding-left: 0">
+                                                <p id="curr_time{{ song.yt_id.value }}" style="font-size: 11px">0:00</p>
+                                            </div>
+                                            <div class="col align-self-end" style="padding-right: 0">
+                                                <p id="duration{{ song.yt_id.value }}"  style="font-size: 11px; text-align:right">0:00</p>
                                             </div>
                                         </div>
                                     </div>

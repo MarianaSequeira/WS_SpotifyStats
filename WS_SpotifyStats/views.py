@@ -31,6 +31,17 @@ def song_page(request, id):
     res = get_artist_genres(artist_name)
     artist_genre_info = get_info(res)
 
+    similar_songs = get_similar_songs(id)
+
+    song_list_fix = list()
+    song_id_set = set()
+
+    for song in similar_songs:
+        if song['similar']['value'] not in song_id_set:
+            song_list_fix.append(song)
+            song_id_set.add(song['similar']['value'])
+
+
     labels = []
     data = []
 
@@ -53,11 +64,13 @@ def song_page(request, id):
     min = math.floor(duration_ms / 60000)
     seg = math.floor(duration_ms % 60000 / 1000);
 
+    # print(song_info)
+
     tparams = {
         'song_info': song_info,
+        'similar_songs':song_list_fix,
         'labels': labels,
         'data': data,
-        'artist_name': artist_name,
         'artist_name': artist_name,
         'duration': str(min) + ' min and ' + str(seg) + ' sec',
         'artist_genre_info': artist_genre_info,
@@ -77,11 +90,17 @@ def songs_page(request):
         songs = get_most_popular_songs()
         title = "TOP 100"
 
-    print(songs)
+    # print(songs)
+    song_list_fix = list()
+    song_id_set = set()
+
+    for song in songs:
+        if song['s']['value'] not in song_id_set:
+            song_list_fix.append(song)
+            song_id_set.add(song['s']['value'])
 
     tparams = {
-        'ola': "ola",
-        'songs': songs,
+        'songs': song_list_fix,
         'title': title,
     }
     return render(request, 'songsPage.html', tparams)
@@ -131,7 +150,7 @@ def artist_page(request, id):
     wikipedia_url = ""
 
     try:
-        page = wikipedia.page(artist_info['name'])
+        page = wikipedia.page(artist_info['name'], auto_suggest=False)
         summary = page.summary[:400]
         wikipedia_url = page.url
     except Exception as e:
@@ -182,20 +201,17 @@ def genre_page(request, id):
 
     artists = get_artist_with_genre(id)
 
-    song_ids = get_most_popular_songs_by_genre(id)
+    print(artists)
 
-    songs = dict()
-    for song in song_ids:
-        res = describe_entity(song['s']['value'])
-        songs[song['s']['value']] = get_info(res)
+    song_info = get_most_popular_songs_by_genre(id)
 
-    print(songs)
     tparams = {
         'id': id,
         'genre_info':genre_info,
         'artists':artists,
-        'song_info':songs
+        'song_info':song_info
     }
+
     return render(request, 'genrePage.html', tparams)
 
 
