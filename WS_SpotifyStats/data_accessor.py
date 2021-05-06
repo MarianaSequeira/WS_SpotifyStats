@@ -1,6 +1,7 @@
 import json
 from s4api.graphdb_api import GraphDBApi
 from s4api.swagger import ApiClient
+import time
 
 endpoint = "http://localhost:7200"
 repo_name = "spotify"
@@ -18,20 +19,19 @@ prefix w3:<http://www.w3.org/2001/XMLSchema#>"""
 
 def get_most_popular_songs():
     query = f"""{PREFIXES}
-    select distinct * where {{
+    select distinct ?s ?name ?pop ?cover_art (GROUP_CONCAT(DISTINCT ?artist; SEPARATOR=",") AS ?artists) (GROUP_CONCAT(DISTINCT ?artist_name ; SEPARATOR="," ) AS ?artist_names ) where {{
         ?s pred:type type:song .
         ?s pred:name ?name .
         ?s pred:popularity ?pop .
         ?s pred:artists ?artist . 
         ?artist pred:name ?artist_name .
-        OPTIONAL{{ ?s pred:cover_art ?cover_art }}
-    }}  ORDER BY DESC(?pop) LIMIT 102
-    """
+            OPTIONAL{{ ?s pred:cover_art ?cover_art }}
+    }} GROUP BY ?s ?pop ?name ?cover_art ORDER BY DESC(?pop) LIMIT 102"""
+
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -51,7 +51,6 @@ def get_songs_by_partial_name(name):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -69,7 +68,6 @@ def get_genre_by_partial_name(name):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -87,7 +85,6 @@ def get_artist_by_partial_name(name):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -107,7 +104,6 @@ def get_artist_with_genre(genre):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -125,7 +121,6 @@ def get_artist_genres(artist_name):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -146,7 +141,6 @@ def get_similar_songs_by_artists_genre(song_uri):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -163,7 +157,6 @@ def get_name_of_artists_by_genre(genre_uri):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -181,7 +174,6 @@ def get_name_of_artists_by_genre_name(genre_name):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -199,7 +191,6 @@ def get_most_popular_songs_of_artist(artist_uri):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -217,7 +208,6 @@ def get_most_popular_artists():
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -233,7 +223,6 @@ def get_songs_by_artist(artist_uri):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -250,7 +239,6 @@ def get_artist_name_by_id(id):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -269,7 +257,6 @@ def get_all_genres():
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -281,7 +268,6 @@ def describe_entity(uri):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -305,7 +291,6 @@ def get_most_popular_songs_by_genre(genre_id):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -326,7 +311,6 @@ def get_similar_songs(song_id):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
@@ -342,9 +326,91 @@ def get_elem_count(elem):
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
 
-    accessor.sparql_select()
     res = json.loads(res)
 
     return res['results']['bindings']
 
-# print(get_most_popular_songs_of_artist("http://SpotifyStats.com/artist/1"))
+
+def get_song_by_name_artist_genres(song_name, artist_name, genre_list):
+    genre_template_query = """
+    {
+        ?genre pred:type type:genre .
+        ?art pred:genre ?genre .
+        ?s pred:artists ?art .
+        ?genre pred:name ?genre_name .
+        filter (lcase(?genre_name)="REPLACEHERE")
+    }"""
+    genre_query = ""
+    if genre_list[0] != '':
+        genre_query += "{"
+        for count, genre_name in enumerate(genre_list):
+            genre_name = genre_name.strip()
+            genre_query += genre_template_query.replace("REPLACEHERE", genre_name)
+            if count < (len(genre_list)-1):
+                genre_query += "\nUNION"
+            if count == (len(genre_list) - 1):
+                genre_query += "}"
+
+    query = f"""{PREFIXES}
+    
+    select distinct ?s ?name ?pop ?cover_art (GROUP_CONCAT(DISTINCT ?art; SEPARATOR=", ") AS ?artists) (GROUP_CONCAT(DISTINCT ?art_name; SEPARATOR=", ") AS ?artist_names) where {{
+        {{
+            ?s pred:type type:song ;
+                pred:name ?name ;
+                pred:popularity ?pop .
+                OPTIONAL {{ ?s pred:cover_art ?cover_art . }}
+            filter regex(?name, "{song_name}", "i")
+        }}
+        {{
+            ?art pred:type type:artist ;
+                 pred:name ?art_name .
+            ?s pred:artists ?art .
+            filter regex(?art_name, "{artist_name}", "i")
+        }}
+        {genre_query}
+    }} GROUP BY ?s ?pop ?name ?cover_art ORDER BY DESC(?pop) LIMIT 9"""
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+def insert_recent_song(song_id):
+    last_seen = int(time.time())
+
+    query = f"""{PREFIXES}
+    delete {{ ?s pred:last_seen ?o . }}
+    insert {{ ?s pred:last_seen {last_seen} . }}
+    where{{ 
+        OPTIONAL {{ ?s pred:last_seen ?o . }}
+        values ?s {{ <http://SpotifyStats.com/song/{song_id}> }}
+    }} """
+
+    payload_query = {"update": query}
+    res = accessor.sparql_update(body=payload_query, repo_name=repo_name)
+
+
+
+
+def get_last_seen_songs():
+    query = f"""{PREFIXES}
+    select ?s ?cover_art ?name ?pop (GROUP_CONCAT(DISTINCT ?art; SEPARATOR=", ") AS ?artists) (GROUP_CONCAT(DISTINCT ?art_name; SEPARATOR=", ") AS ?artist_names) where {{
+        ?s pred:last_seen ?p ;
+           pred:name ?name ;
+           pred:artists ?art ;
+           pred:popularity ?pop .
+        ?art pred:name ?art_name .
+        OPTIONAL {{ ?s pred:cover_art ?cover_art }}
+    }} GROUP BY ?s ?name ?cover_art ?pop ORDER BY DESC(?p) LIMIT 3
+    """
+
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    res = json.loads(res)
+
+    return res['results']['bindings']

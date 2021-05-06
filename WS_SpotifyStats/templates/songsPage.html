@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load static %}
+{% load split %}
 
 {% block content %}
 
@@ -41,7 +42,16 @@
                     {% endif %}
                     <div class="song-info" style="padding-top: 2%">
                         <a href="{% url 'song'  song.s.value|cut:'http://SpotifyStats.com/song/' %}" ><h4>{{ song.name.value}}</h4></a>
-                        <p><b><i class="fas fa-microphone-alt"></i> Artist: </b><a href="{% url 'artist'  song.artist.value|cut:'http://SpotifyStats.com/artist/' %}" >{{ song.artist_name.value }}</a></p>
+                        {% with song.artists.value|split:"," as artist_uris %}
+                            {% with song.artist_names.value|split:"," as artist_names %}
+                                <p><b><i class="fas fa-microphone-alt"></i> Artist: </b>
+                                    {% for artist_uri, artist_name in artist_uris|zip:artist_names %}
+                                        <a href="{% url 'artist'  artist_uri|cut:'http://SpotifyStats.com/artist/' %}" >{{artist_name}} </a>
+                                        {% if forloop.counter != artist_uris|length %}, {% endif %}
+                                    {% endfor %}
+                                </p>
+                            {% endwith %}
+                        {% endwith %}
                         <p><b><i class="fas fa-fire"></i> Global Popularity: </b>{{ song.pop.value}}</p>
                     </div>
                 </div>
@@ -54,6 +64,47 @@
             <div class="col align-self-center" style="text-align: center; padding-bottom: 60px">
                 <button onclick=showAll() style="background: #fc0254; height: 60px;  min-width: 167px; right: 0; top: 0; border: none; border-radius: 80px; color: #fff; font-size: 15px;">Show All</button>
             </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row" style="padding-top: 80px">
+            <div class="section-title" style="width:100%;text-align:center;">
+                <h4>Recently viewed songs</h4>
+            </div>
+        </div>
+        <div class="row">
+            {% for song in recent_songs %}
+                <div class="col-4 song"
+                    {% if forloop.counter > 15 %}
+                        style="padding-left: 0; margin-bottom: 50px; display: none"
+                    {% else %}
+                        style="padding-left: 0; margin-bottom: 50px;"
+                    {% endif %}
+                >
+                    <div class="song-info-box" >
+                        {% if not song.cover_art.value %}
+                            <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/cd.png" alt="">
+                        {% else %}
+                            <img src="{{ song.cover_art.value }}" alt="">
+                        {% endif %}
+                        <div class="song-info" style="padding-top: 2%">
+                            <a href="{% url 'song'  song.s.value|cut:'http://SpotifyStats.com/song/' %}" ><h4>{{ song.name.value}}</h4></a>
+                            {% with song.artists.value|split:"," as artist_uris %}
+                                {% with song.artist_names.value|split:"," as artist_names %}
+                                    <p><b><i class="fas fa-microphone-alt"></i> Artist: </b>
+                                        {% for artist_uri, artist_name in artist_uris|zip:artist_names %}
+                                            <a href="{% url 'artist'  artist_uri|cut:'http://SpotifyStats.com/artist/' %}" >{{artist_name}} </a>
+                                            {% if forloop.counter != artist_uris|length %}, {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                {% endwith %}
+                            {% endwith %}
+                            <p><b><i class="fas fa-fire"></i> Global Popularity: </b>{{ song.pop.value}}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
 

@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from WS_SpotifyStats.data_accessor import *
 import wikipedia
+import time
 
 basename = "http://SpotifyStats.com/"
 
@@ -15,11 +16,21 @@ def home(request):
     artist_count = get_elem_count("artist")
     genre_count = get_elem_count("genre")
 
+    songs = []
+
+    if request.method == 'POST':
+        song = request.POST['song']
+        artist = request.POST['artist']
+        genre = request.POST['genre']
+        songs = get_song_by_name_artist_genres(song, artist, genre.split(","))
+
     tparams = {
         'song_count': song_count[0]['cnt']['value'],
         'artist_count': artist_count[0]['cnt']['value'],
         'genre_count': genre_count[0]['cnt']['value'],
+        'results': songs
     }
+
     return render(request, 'index.html', tparams)
 
 
@@ -29,6 +40,8 @@ def song_page(request, id):
 
     res = describe_entity(basename + 'song/' + id)
     song_info = get_info(res)
+
+    insert_recent_song(id)
 
     res = get_artist_name_by_id(song_info['artists'].replace("http://SpotifyStats.com/artist/", ""))
     artist_name = res[0]['name']['value']
@@ -87,6 +100,9 @@ def songs_page(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
 
+    recent_songs = get_last_seen_songs()
+    print(recent_songs)
+
     if request.method == 'POST':
         search = request.POST['search']
         songs = get_songs_by_partial_name(search)
@@ -95,19 +111,12 @@ def songs_page(request):
         songs = get_most_popular_songs()
         title = "TOP 100"
 
-    # print(songs)
-    song_list_fix = list()
-    song_id_set = set()
-
-    for song in songs:
-        if song['s']['value'] not in song_id_set:
-            song_list_fix.append(song)
-            song_id_set.add(song['s']['value'])
-
     tparams = {
-        'songs': song_list_fix,
+        'songs': songs,
         'title': title,
+        'recent_songs': recent_songs
     }
+
     return render(request, 'songsPage.html', tparams)
 
 
@@ -226,9 +235,9 @@ def genre_page(request, id):
 
     tparams = {
         'id': id,
-        'genre_info':genre_info,
-        'artists':artists,
-        'song_info':song_list_fix
+        'genre_info': genre_info,
+        'artists': artists,
+        'song_info': song_list_fix
     }
 
     return render(request, 'genrePage.html', tparams)
