@@ -68,11 +68,13 @@
     </div>
 
     <div class="container">
-        <div class="row" style="padding-top: 80px">
-            <div class="section-title" style="width:100%;text-align:center;">
-                <h4>Recently viewed songs</h4>
+        {% if recent_songs %}
+            <div class="row" style="padding-top: 80px">
+                <div class="section-title" style="width:100%;text-align:center;">
+                    <h4>Recently viewed songs</h4>
+                </div>
             </div>
-        </div>
+        {% endif %}
         <div class="row">
             {% for song in recent_songs %}
                 <div class="col-4 song"
