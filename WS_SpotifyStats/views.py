@@ -11,9 +11,14 @@ basename = "http://SpotifyStats.com/"
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
+    song_count = get_elem_count("song")
+    artist_count = get_elem_count("artist")
+    genre_count = get_elem_count("genre")
 
     tparams = {
-        'ola': "ola",
+        'song_count': song_count[0]['cnt']['value'],
+        'artist_count': artist_count[0]['cnt']['value'],
+        'genre_count': genre_count[0]['cnt']['value'],
     }
     return render(request, 'index.html', tparams)
 
@@ -154,6 +159,12 @@ def artist_page(request, id):
         summary = page.summary[:400]
         wikipedia_url = page.url
     except Exception as e:
+        try:
+            page = wikipedia.page(artist_info['name'], auto_suggest=True)
+            summary = page.summary[:400]
+            wikipedia_url = page.url
+        except Exception as f:
+            pass
         pass
 
     duration_ms = float(artist_info['duration_ms'])
@@ -205,11 +216,19 @@ def genre_page(request, id):
 
     song_info = get_most_popular_songs_by_genre(id)
 
+    song_list_fix = list()
+    song_id_set = set()
+
+    for song in song_info:
+        if song['s']['value'] not in song_id_set:
+            song_list_fix.append(song)
+            song_id_set.add(song['s']['value'])
+
     tparams = {
         'id': id,
         'genre_info':genre_info,
         'artists':artists,
-        'song_info':song_info
+        'song_info':song_list_fix
     }
 
     return render(request, 'genrePage.html', tparams)

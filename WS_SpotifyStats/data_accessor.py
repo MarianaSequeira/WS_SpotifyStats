@@ -24,7 +24,7 @@ def get_most_popular_songs():
         ?s pred:popularity ?pop .
         ?s pred:artists ?artist . 
         ?artist pred:name ?artist_name .
-        ?s pred:cover_art ?cover_art
+        OPTIONAL{{ ?s pred:cover_art ?cover_art }}
     }}  ORDER BY DESC(?pop) LIMIT 102
     """
     payload_query = {"query": query}
@@ -36,22 +36,6 @@ def get_most_popular_songs():
 
     return res['results']['bindings']
 
-
-def get_song_count():
-    query = f"""{PREFIXES}
-    select (count(?s) as ?count) where {{ 
-        ?s pred:type type:song .
-    }}"""
-    payload_query = {"query": query}
-
-    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
-
-    accessor.sparql_select()
-    res = json.loads(res)
-
-    return res['results']['bindings']
-
-
 def get_songs_by_partial_name(name):
     query = f"""{PREFIXES}
     select distinct * where {{
@@ -59,7 +43,8 @@ def get_songs_by_partial_name(name):
         ?s pred:name ?name .
         ?s pred:popularity ?pop .
         ?s pred:artists ?artist . 
-        ?artist pred:name ?artist_name
+        ?artist pred:name ?artist_name .
+        OPTIONAL {{ ?s pred:cover_art ?cover_art . }}
         filter regex(?name,"{name}", "i") 
     }} ORDER BY DESC(?pop) limit 102 """
     payload_query = {"query": query}
@@ -117,7 +102,7 @@ def get_artist_with_genre(genre):
         ?s pred:popularity ?pop .
         ?s pred:count ?count .
         OPTIONAL {{ ?s pred:face_photo ?face_photo }}
-    }} ORDER BY DESC(w3:double(?pop)) limit 4"""
+    }} ORDER BY DESC(?pop) limit 4"""
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
@@ -209,7 +194,7 @@ def get_most_popular_songs_of_artist(artist_uri):
         ?s pred:artists <{artist_uri}> .
         ?s pred:popularity ?pop
     }}  
-    ORDER BY DESC(w3:double(?pop)) LIMIT 3"""
+    ORDER BY DESC(?pop) LIMIT 3"""
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
@@ -279,7 +264,7 @@ def get_all_genres():
         ?s pred:name ?name .
         ?s pred:popularity ?pop .
     }}  
-    ORDER BY DESC(w3:double(?pop)) limit 102"""
+    ORDER BY DESC(?pop) limit 102"""
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
@@ -314,7 +299,7 @@ def get_most_popular_songs_by_genre(genre_id):
         OPTIONAL {{ ?s pred:yt_id ?yt_id . }}
         OPTIONAL {{ ?s pred:cover_art ?cover_art . }}
     }}  
-    ORDER BY DESC(w3:double(?pop)) limit 5"""
+    ORDER BY DESC(?pop) limit 5"""
 
     payload_query = {"query": query}
 
@@ -347,6 +332,19 @@ def get_similar_songs(song_id):
     return res['results']['bindings']
 
 
+def get_elem_count(elem):
+    query = f"""{PREFIXES}
+    select (Count(?s) as ?cnt) where {{ 
+        ?s pred:type type:{elem} . 
+    }} """
 
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    accessor.sparql_select()
+    res = json.loads(res)
+
+    return res['results']['bindings']
 
 # print(get_most_popular_songs_of_artist("http://SpotifyStats.com/artist/1"))

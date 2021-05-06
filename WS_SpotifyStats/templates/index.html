@@ -10,9 +10,8 @@
 						<div class="col-lg-6">
 							<div class="hs-text">
 								<h2><span>Music</span> for everyone.</h2>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. </p>
-								<a href="#" class="site-btn">Download Now</a>
-								<a href="#" class="site-btn sb-c2">Start free trial</a>
+								<p>The sound you want to listen to is right this way!</p>
+								<a href="{% url 'songs' %}" class="site-btn">Give it a try</a>
 							</div>
 						</div>
 						<div class="col-lg-6">
@@ -29,9 +28,8 @@
 						<div class="col-lg-6">
 							<div class="hs-text">
 								<h2><span>Listen </span> to new music.</h2>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. </p>
-								<a href="#" class="site-btn">Download Now</a>
-								<a href="#" class="site-btn sb-c2">Start free trial</a>
+								<p>Our similar song algorithm is sure to make you listen to new songs!</p>
+                                <a href="{% url 'songs' %}" class="site-btn">Try it now</a>
 							</div>
 						</div>
 						<div class="col-lg-6">
@@ -52,12 +50,12 @@
 			<div class="row">
 				<div class="col-lg-6">
 					<div class="section-title">
-						<h2>Unlimited Access to 100K tracks</h2>
+						<h2>Access to more than 160k tracks!</h2>
 					</div>
 				</div>
 				<div class="col-lg-6">
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum sus-pendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida.</p>
-					<a href="#" class="site-btn">Try it now</a>
+                    <p style="text-align: justify">By usign the data present in the dataset Spotify Dataset 1922-2021, ~160k Tracks from <a href="https://www.kaggle.com/yamaerenay">Yamac Eren Ay</a> in Kaggle we can provide a great user experience to enjoy your favorite songs.</p>
+					<a href="{% url 'songs' %}" class="site-btn">Try it now</a>
 				</div>
 			</div>
 		</div>
@@ -68,25 +66,15 @@
 	<section class="how-section spad set-bg" data-setbg="../static/img/how-to-bg.jpg">
 		<div class="container text-white">
 			<div class="section-title">
-				<h2>How it works</h2>
+				<h2>Our Data</h2>
 			</div>
 			<div class="row">
 				<div class="col-md-4">
 					<div class="how-item">
 						<div class="hi-icon">
-							<img src="../static/img/icons/brain.png" alt="">
+							<img src="../static/img/icons/smartphone.png" alt="">
 						</div>
-						<h4>Create an account</h4>
-						<p>Lorem ipsum dolor sit amet, consectetur adipi-scing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum sus-pendisse ultrices gravida. </p>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="how-item">
-						<div class="hi-icon">
-							<img src="../static/img/icons/pointer.png" alt="">
-						</div>
-						<h4>Choose a plan</h4>
-						<p>Donec in sodales dui, a blandit nunc. Pellen-tesque id eros venenatis, sollicitudin neque sodales, vehicula nibh. Nam massa odio, portti-tor vitae efficitur non. </p>
+						<h4>We have {{ song_count}} songs</h4>
 					</div>
 				</div>
 				<div class="col-md-4">
@@ -94,8 +82,15 @@
 						<div class="hi-icon">
 							<img src="../static/img/icons/smartphone.png" alt="">
 						</div>
-						<h4>Download Music</h4>
-						<p>Ablandit nunc. Pellentesque id eros venenatis, sollicitudin neque sodales, vehicula nibh. Nam massa odio, porttitor vitae efficitur non, ultric-ies volutpat tellus. </p>
+						<h4>From {{ artist_count}} artists</h4>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="how-item">
+						<div class="hi-icon">
+							<img src="../static/img/icons/smartphone.png" alt="">
+						</div>
+						<h4>Covering {{ genre_count}} genres</h4>
 					</div>
 				</div>
 			</div>
