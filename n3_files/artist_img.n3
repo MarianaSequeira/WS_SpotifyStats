@@ -1,3 +1,11 @@
+@prefix rdf: <http://SpotifyStats.com/rdf/> . 
+@prefix pred: <http://SpotifyStats.com/pred/> . 
+@prefix song: <http://SpotifyStats.com/song/> . 
+@prefix artist: <http://SpotifyStats.com/artist/> . 
+@prefix genre: <http://SpotifyStats.com/genre/> . 
+@prefix type: <http://SpotifyStats.com/type/> . 
+@prefix w3: <http://www.w3.org/2001/XMLSchema#> . 
+
 artist:3335 pred:face_photo "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Til_Tuesday_1985_press_photo.jpg/269px-Til_Tuesday_1985_press_photo.jpg"^^w3:string . 
 artist:29109 pred:face_photo "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/And-you-will-know-us-by-the-trail-of-the-dead-in-vancouver-march-2009-joe-rayment.jpg/300px-And-you-will-know-us-by-the-trail-of-the-dead-in-vancouver-march-2009-joe-rayment.jpg"^^w3:string . 
 artist:3820 pred:face_photo "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/10%2C000_Maniacs.jpg/300px-10%2C000_Maniacs.jpg"^^w3:string . 
