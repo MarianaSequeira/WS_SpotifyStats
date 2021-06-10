@@ -1,0 +1,143 @@
+// Change pred -> spotp 
+// Change pred:name -> dc:title
+// Remove pred:type type:X 
+// Replace pred
+
+
+// Change song, artist and genre prefix.. 
+@prefix spot: <http://SpotifyStats.com/spot/> .
+@prefix spotc: <http://SpotifyStats.com/spotc/> .
+@prefix spotp: <http://SpotifyStats.com/spotp/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+
+// Change IDs to contain the first letter of its class
+// Remove KEY property from Songs and Artists
+
+
+<!--
+///////////////////////////////////////////////////////////////////////////////////////
+//
+// Class Annotation 
+//
+///////////////////////////////////////////////////////////////////////////////////////
+-->
+
+
+foaf:Agent rdf:type rdfs:Class .
+
+spotc:Object rdf:type rdfs:Class .
+
+spotc:Song rdf:type rdfs:Class ;
+    rdfs:subClassOf foaf:Object .
+
+spotc:Artist rdf:type rdfs:Class ;
+    rdfs:subClassOf foaf:Object ;
+    rdfs:subClassOf foaf:Agent .
+
+spotc:Genre rdf:type rdfs:Class ;
+    rdfs:subClassOf foaf:Object .
+
+
+<!--
+///////////////////////////////////////////////////////////////////////////////////////
+//
+// Properties Annotation 
+//
+///////////////////////////////////////////////////////////////////////////////////////
+-->
+
+spotp:artists rdf:type rdf:Property ;
+    rdfs:domain spotc:Song ; 
+    rdfs:range spotc:Artist .
+
+spotp:release_date rdf:type rdf:Property ;
+    rdfs:domain spotc:Song ; 
+    rdfs:range rdfs:Literal .
+
+spotp:year rdf:type rdf:Property ;
+    rdfs:domain spotc:Song ; 
+    rdfs:range rdfs:Literal .
+
+spotp:yt_id rdf:type rdf:Property ;
+    rdfs:domain spotc:Song ; 
+    rdfs:range rdfs:Literal .
+
+spotp:cover_art rdf:type rdf:Property ;
+    rdfs:domain spotc:Song ; 
+    rdfs:range rdfs:Literal .
+
+spotp:similar rdf:type rdf:Property ;
+    rdfs:domain spotc:Song ; 
+    rdfs:range spotc:Song .
+
+spotp:genre rdf:type rdf:Property ;
+    rdfs:domain spotc:Artist ;
+    rdfs:range spotc:Genre .
+
+spotp:count rdf:type rdf:Property ;
+    rdfs:domain spotc:Artist ;
+    rdfs:range rdfs:Literal .
+
+spotp:key rdf:type rdf:Property ;
+    rdfs:domain spotc:Genre;
+    rdfs:range rdfs:Literal .
+
+spotp:acousticness rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+spotp:danceability rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+spotp:duration_ms rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+spotp:energy rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+spotp:explicit rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+spotp:instrumentalness rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+spotp:liveness rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+spotp:loudness rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+spotp:mode rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+spotp:popularity rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+spotp:speechiness rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+spotp:tempo rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+spotp:valance rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ; 
+    rdfs:range rdfs:Literal .
+
+dc:title rdf:type rdf:Property ;
+    rdfs:domain spotc:Object ;
+    rdfs:range rdfs:Literal ;
+    rdfs:subPropertyOf foaf:name .
