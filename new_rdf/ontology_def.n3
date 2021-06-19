@@ -133,7 +133,7 @@ spotp:tempo rdf:type rdf:Property ;
     rdfs:domain spotc:Object ; 
     rdfs:range rdfs:Literal .
 
-spotp:valance rdf:type rdf:Property ;
+spotp:valence rdf:type rdf:Property ;
     rdfs:domain spotc:Object ; 
     rdfs:range rdfs:Literal .
 

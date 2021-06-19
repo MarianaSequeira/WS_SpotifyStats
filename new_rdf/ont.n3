@@ -1,0 +1,311 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix w3: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://SpotifyStats.com/rdf/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix spot: <http://SpotifyStats.com/spot/> .
+@prefix spotc: <http://SpotifyStats.com/spotc/> .
+@prefix spotp: <http://SpotifyStats.com/spotp/> .
+@base <http://www.w3.org/2002/07/owl#> .
+
+[ rdf:type owl:Ontology
+ ] .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://SpotifyStats.com/rdf/type
+rdf:type rdf:type owl:AnnotationProperty ;
+         rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/elements/1.1/title
+dc:title rdf:type owl:AnnotationProperty ;
+         rdfs:subPropertyOf foaf:name .
+
+
+###  http://xmlns.com/foaf/0.1/name
+foaf:name rdf:type owl:AnnotationProperty ;
+          rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://www.w3.org/2001/XMLSchema#date
+xsd:date rdf:type rdfs:Datatype ;
+         rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://SpotifyStats.com/spotp/artists
+spotp:artists rdf:type owl:ObjectProperty ;
+              owl:inverseOf spotp:hasSong ;
+              rdfs:domain spotc:Song ;
+              rdfs:range spotc:Artist ;
+              rdf:type rdf:Property ,
+                       owl:ObjectProperty .
+
+
+###  http://SpotifyStats.com/spotp/genre
+spotp:genre rdf:type owl:ObjectProperty ;
+            owl:inverseOf spotp:hasArtist ;
+            rdfs:domain spotc:Artist ;
+            rdfs:range spotc:Genre ;
+            rdf:type rdf:Property ,
+                     owl:ObjectProperty .
+
+
+###  http://SpotifyStats.com/spotp/hasArtist
+spotp:hasArtist rdf:type owl:ObjectProperty ;
+                rdfs:domain spotc:Genre ;
+                rdfs:range spotc:Artist ;
+                rdf:type owl:ObjectProperty .
+
+
+###  http://SpotifyStats.com/spotp/hasSong
+spotp:hasSong rdf:type owl:ObjectProperty ;
+              rdfs:domain spotc:Artist ;
+              rdfs:range spotc:Song ;
+              rdf:type owl:ObjectProperty .
+
+
+###  http://SpotifyStats.com/spotp/similar
+spotp:similar rdf:type owl:ObjectProperty ;
+              rdfs:domain spotc:Song ;
+              rdfs:range spotc:Song ;
+              rdf:type rdf:Property ,
+                       owl:ObjectProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://SpotifyStats.com/spotp/acousticness
+spotp:acousticness rdf:type owl:DatatypeProperty ;
+                   rdfs:domain foaf:Object ;
+                   rdfs:range rdfs:Literal ;
+                   rdf:type rdf:Property ,
+                            owl:AnnotationProperty ,
+                            owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/count
+spotp:count rdf:type owl:DatatypeProperty ;
+            rdfs:domain spotc:Artist ;
+            rdfs:range rdfs:Literal ;
+            rdf:type rdf:Property ,
+                     owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/cover_art
+spotp:cover_art rdf:type owl:DatatypeProperty ;
+                rdfs:domain spotc:Song ;
+                rdfs:range rdfs:Literal ;
+                rdf:type rdf:Property ,
+                         owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/danceability
+spotp:danceability rdf:type owl:DatatypeProperty ;
+                   rdfs:domain foaf:Object ;
+                   rdfs:range rdfs:Literal ;
+                   rdf:type rdf:Property ,
+                            owl:AnnotationProperty ,
+                            owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/duration_ms
+spotp:duration_ms rdf:type owl:DatatypeProperty ;
+                  rdfs:domain foaf:Object ;
+                  rdfs:range rdfs:Literal ;
+                  rdf:type rdf:Property ,
+                           owl:AnnotationProperty ,
+                           owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/energy
+spotp:energy rdf:type owl:DatatypeProperty ;
+             rdfs:domain foaf:Object ;
+             rdfs:range rdfs:Literal ;
+             rdf:type rdf:Property ,
+                      owl:AnnotationProperty ,
+                      owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/explicit
+spotp:explicit rdf:type owl:DatatypeProperty ;
+               rdfs:domain foaf:Object ;
+               rdfs:range rdfs:Literal ;
+               rdf:type rdf:Property ,
+                        owl:AnnotationProperty ,
+                        owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/instrumentalness
+spotp:instrumentalness rdf:type owl:DatatypeProperty ;
+                       rdfs:domain foaf:Object ;
+                       rdfs:range rdfs:Literal ;
+                       rdf:type rdf:Property ,
+                                owl:AnnotationProperty ,
+                                owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/key
+spotp:key rdf:type owl:DatatypeProperty ;
+          rdfs:domain spotc:Genre ;
+          rdfs:range rdfs:Literal ;
+          rdf:type rdf:Property ,
+                   owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/liveness
+spotp:liveness rdf:type owl:DatatypeProperty ;
+               rdfs:domain foaf:Object ;
+               rdfs:range rdfs:Literal ;
+               rdf:type rdf:Property ,
+                        owl:AnnotationProperty ,
+                        owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/loudness
+spotp:loudness rdf:type owl:DatatypeProperty ;
+               rdfs:domain foaf:Object ;
+               rdfs:range rdfs:Literal ;
+               rdf:type rdf:Property ,
+                        owl:AnnotationProperty ,
+                        owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/mode
+spotp:mode rdf:type owl:DatatypeProperty ;
+           rdfs:domain foaf:Object ;
+           rdfs:range rdfs:Literal ;
+           rdf:type rdf:Property ,
+                    owl:AnnotationProperty ,
+                    owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/popularity
+spotp:popularity rdf:type owl:DatatypeProperty ;
+                 rdfs:domain foaf:Object ;
+                 rdfs:range rdfs:Literal ;
+                 rdf:type rdf:Property ,
+                          owl:AnnotationProperty ,
+                          owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/release_date
+spotp:release_date rdf:type owl:DatatypeProperty ;
+                   rdfs:domain spotc:Song ;
+                   rdfs:range rdfs:Literal ;
+                   rdf:type rdf:Property ,
+                            owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/speechiness
+spotp:speechiness rdf:type owl:DatatypeProperty ;
+                  rdfs:domain foaf:Object ;
+                  rdfs:range rdfs:Literal ;
+                  rdf:type rdf:Property ,
+                           owl:AnnotationProperty ,
+                           owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/tempo
+spotp:tempo rdf:type owl:DatatypeProperty ;
+            rdfs:domain foaf:Object ;
+            rdfs:range rdfs:Literal ;
+            rdf:type rdf:Property ,
+                     owl:AnnotationProperty ,
+                     owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/valence
+spotp:valence rdf:type owl:DatatypeProperty ;
+              rdfs:domain foaf:Object ;
+              rdfs:range rdfs:Literal ;
+              rdf:type rdf:Property ,
+                       owl:AnnotationProperty ,
+                       owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/year
+spotp:year rdf:type owl:DatatypeProperty ;
+           rdfs:domain spotc:Song ;
+           rdfs:range rdfs:Literal ;
+           rdf:type owl:DatatypeProperty .
+
+
+###  http://SpotifyStats.com/spotp/yt_id
+spotp:yt_id rdf:type owl:DatatypeProperty ;
+            rdfs:domain spotc:Song ;
+            rdfs:range rdfs:Literal ;
+            rdf:type rdf:Property ,
+                     owl:DatatypeProperty .
+
+
+###  http://purl.org/dc/elements/1.1/title
+dc:title rdf:type owl:DatatypeProperty ;
+         rdfs:domain foaf:Object ;
+         rdfs:range rdfs:Literal .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://SpotifyStats.com/spotc/Artist
+spotc:Artist rdf:type owl:Class ;
+             rdfs:subClassOf foaf:Object ;
+             rdf:type rdfs:Class ,
+                      owl:Class .
+
+
+###  http://SpotifyStats.com/spotc/Genre
+spotc:Genre rdf:type owl:Class ;
+            rdfs:subClassOf foaf:Object ;
+            rdf:type rdfs:Class ,
+                     owl:Class .
+
+
+###  http://SpotifyStats.com/spotc/MostActiveArtists
+spotc:MostActiveArtists rdf:type owl:Class ;
+                        owl:equivalentClass [ rdf:type owl:Restriction ;
+                                              owl:onProperty spotp:hasSong ;
+                                              owl:minCardinality "2"^^xsd:nonNegativeInteger
+                                            ] ;
+                        rdfs:subClassOf spotc:Artist ;
+                        rdf:type owl:Class .
+
+
+###  http://SpotifyStats.com/spotc/PopularGenres
+spotc:PopularGenres rdf:type owl:Class ;
+                    owl:equivalentClass [ rdf:type owl:Restriction ;
+                                          owl:onProperty spotp:hasArtist ;
+                                          owl:minCardinality "10"^^xsd:nonNegativeInteger
+                                        ] ;
+                    rdfs:subClassOf spotc:Genre ;
+                    rdf:type owl:Class .
+
+
+###  http://SpotifyStats.com/spotc/Song
+spotc:Song rdf:type owl:Class ;
+           rdfs:subClassOf foaf:Object ;
+           rdf:type rdfs:Class ,
+                    owl:Class .
+
+
+###  http://xmlns.com/foaf/0.1/Object
+foaf:Object rdf:type owl:Class ;
+            rdf:type owl:Class .
+
