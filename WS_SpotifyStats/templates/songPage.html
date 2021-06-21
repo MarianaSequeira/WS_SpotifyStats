@@ -2,144 +2,175 @@
 {% load static %}
 
 {% block content %}
+    <div xmlns:spotc="http://SpotifyStats.com/spotc/"
+         xmlns:spotp="http://SpotifyStats.com/spotp/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         about="{{uri}}"
+         typeof="spotc:Song">
 
-    <section class="player-section set-bg" data-setbg="{% static 'img/player-bg.jpg' %}">
-        <div class="player-box" style="padding-right: 20px">
-            <div id="player{{ song_info.yt_id }}" style="display: none;"></div>
-            <div class="row" style="width: 100%">
-                <div class="col-8">
-                    <div class="row">
-                        <div class="tarck-thumb-warp">
-                            <div class="tarck-thumb">
-                                {% if not song_info.cover_art %}
-                                    <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/cd.png" alt="">
-                                    {% if song_info.yt_id %}
-                                        <button onclick="playVideo('{{ song_info.yt_id }}')" class="wp-play" style="margin-left: -11%;"></button>
+        <section class="player-section set-bg" data-setbg="{% static 'img/player-bg.jpg' %}">
+            <div class="player-box" style="padding-right: 20px">
+                <div id="player{{ song_info.yt_id }}" style="display: none;"></div>
+                <div class="row" style="width: 100%">
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="tarck-thumb-warp">
+                                <div class="tarck-thumb">
+                                    {% if not song_info.cover_art %}
+                                        <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/cd.png" alt="">
+                                        {% if song_info.yt_id %}
+                                            <button onclick="playVideo('{{ song_info.yt_id }}')" class="wp-play" style="margin-left: -11%;"></button>
+                                        {% endif %}
+                                    {% else %}
+                                        <img property="spotp:cover_art" src="{{ song_info.cover_art }}" alt="">
+                                        {% if song_info.yt_id %}
+                                            <button onclick="playVideo('{{ song_info.yt_id }}')" class="wp-play" ></button>
+                                        {% endif %}
                                     {% endif %}
-                                {% else %}
-                                    <img src="{{ song_info.cover_art }}" alt="">
-                                    {% if song_info.yt_id %}
-                                        <button onclick="playVideo('{{ song_info.yt_id }}')" class="wp-play" ></button>
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="wave-player-warp" style="padding-top: 0px">
-                            <div class="wave-player-info">
-                                <h2>{{ song_info.title }}</h2>
-                            </div>
-                            <div class="row" style="padding-top: 47px">
-                                <div class="col-5">
-                                    <ul>
-                                        {% if artist_name %}
-                                            <li style="list-style: none">
-                                                <strong>Artist:</strong><a href="{% url 'artist' song_info.artists|cut:'http://SpotifyStats.com/spot/' %}"><span> {{ artist_name }}</span></a>
-                                            </li>
-                                        {% endif %}
-                                        {% if song_info.release_date %}
-                                            <li style="list-style: none; margin-top: 17px">
-                                                <strong>Release Date:</strong><span> {{ song_info.release_date }}</span>
-                                            </li>
-                                        {% endif %}
-                                        {% if artist_genre_info.keys|length > 0 %}
-                                            <li style="list-style: none; margin-top: 17px">
-                                                <strong>Genre:</strong>
-                                                <span>
-                                                    {% for k, v in artist_genre_info.items %}
-                                                        <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/spot/' %}">{{v|capfirst}}</a>
-                                                        {% if forloop.counter != artist_genre_info|length %}, {% endif %}
-                                                    {% endfor %}
-                                                </span>
-                                            </li>
-                                        {% endif %}
-                                    </ul>
                                 </div>
-                                <div class="col-5">
-                                    <ul>
-                                        {% if song_info.popularity %}
-                                            <li style="list-style: none">
-                                                <strong>Popularity:</strong><span> {{ song_info.popularity|slice:":6" }}</span>
-                                            </li>
-                                        {% endif %}
-                                        {% if duration %}
-                                             <li style="list-style: none; margin-top: 17px">
-                                                 <strong>Duration: </strong><span>{{ duration }} </span>
-                                             </li>
-                                        {% endif %}
-                                        {% if song_info.tempo %}
-                                             <li style="list-style: none; margin-top: 17px">
-                                                 <strong>Tempo: </strong><span>{{ song_info.tempo|slice:":6" }} bpm</span>
-                                             </li>
-                                        {% endif %}
-                                    </ul>
+                            </div>
+                            <div class="wave-player-warp" style="padding-top: 0px">
+                                <div class="wave-player-info">
+                                    <h2 property="dc:title">{{ song_info.title }}</h2>
+                                </div>
+                                <div class="row" style="padding-top: 47px">
+                                    <div class="col-5">
+                                        <ul>
+                                            {% if artist_name %}
+                                                <li style="list-style: none" rel="spotp:artists" >
+                                                    <strong>Artist:</strong>
+                                                        <span about="{{ song_info.artists }}"
+                                                              typeof="spotc:Artist"
+                                                              property="dc:title">
+                                                            <a  href="{% url 'artist' song_info.artists|cut:'http://SpotifyStats.com/spot/' %}">
+                                                                {{ artist_name }}
+                                                            </a>
+                                                        </span>
+
+                                                </li>
+                                            {% endif %}
+                                            {% if song_info.release_date %}
+                                                <li style="list-style: none; margin-top: 17px">
+                                                    <strong >Release Date:</strong><span property="spotp:release_date"> {{ song_info.release_date }}</span>
+                                                </li>
+                                            {% endif %}
+                                            {% if artist_genre_info.keys|length > 0 %}
+                                                <li style="list-style: none; margin-top: 17px">
+                                                    <strong>Genre:</strong>
+                                                    <span rel="spotp:genres">
+                                                        {% for k, v in artist_genre_info.items %}
+                                                            <span about="{{ k }}"
+                                                                  typeof="spotc:Genre"
+                                                                  property="dc:title">
+                                                                <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/spot/' %}">
+                                                                    {{v|capfirst}}
+                                                                </a>
+                                                            </span>
+
+                                                            {% if forloop.counter != artist_genre_info|length %}, {% endif %}
+                                                        {% endfor %}
+                                                    </span>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                    <div class="col-5">
+                                        <ul>
+                                            {% if song_info.popularity %}
+                                                <li style="list-style: none">
+                                                    <strong >Popularity:</strong><span property="spotp:popularity"> {{ song_info.popularity|slice:":6" }}</span>
+                                                </li>
+                                            {% endif %}
+                                            {% if duration %}
+                                                 <li style="list-style: none; margin-top: 17px">
+                                                     <strong >Duration: </strong><span property="spotp:duration">{{ duration }} </span>
+                                                 </li>
+                                            {% endif %}
+                                            {% if song_info.tempo %}
+                                                 <li style="list-style: none; margin-top: 17px">
+                                                     <strong >Tempo: </strong><span property="spotp:tempo">{{ song_info.tempo|slice:":6" }} bpm</span>
+                                                 </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-4">
-                    <canvas id="pie-chart" height="165"></canvas>
+                    <div class="col-4">
+                        <canvas id="pie-chart" height="165"></canvas>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    {% if similar_songs %}
-        <section class="similar-songs-section">
-            <div class="container-fluid">
-                <h3><i class="fas fa-music"></i> Similar Songs</h3>
-                <div class="container">
+        {% if similar_songs %}
+            <section class="similar-songs-section">
+                <div class="container-fluid">
+                    <h3><i class="fas fa-music"></i> Similar Songs</h3>
+                    <div class="container" rel="spotp:similar_songs">
+                        {% for song in similar_songs %}
+                            <!-- song -->
+                            <div class="song-item"
+                                 about="{{ song.similar.value }}"
+                                 typeof="spotc:Song"
+                                 >
+                                <div id="player{{ song.yt_id.value }}" style="display: none;"></div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="song-info-box">
+                                           {% if not song.cover_art.value %}
+                                                <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/cd.png" alt="" style="width: 70px; height: 70px">
+                                           {% else %}
+                                                <img property="spotp:cover_art" src="{{ song.cover_art.value }}" alt="">
+                                           {% endif %}
+                                            <div class="song-info">
+                                                <h4 property="dc:title">
+                                                    <a style="color: #0a183d" href="{% url 'song' song.similar.value|cut:'http://SpotifyStats.com/spot/' %}">
+                                                        {{ song.name.value }}
+                                                    </a>
+                                                </h4>
+                                                <div rel="spotp:artists">
+                                                    <p  about="{{ song.art.value }}"
+                                                        typeof="spotc:Artist"
+                                                    >
+                                                        <a  href="{% url 'artist' song.art.value|cut:'http://SpotifyStats.com/spot/' %}">
+                                                            <span property="dc:title">{{ song.artist_name.value }}</span>
+                                                        </a>
+                                                    </p>
+                                                </div>
 
-
-                    {% for song in similar_songs %}
-                        <!-- song -->
-                        <div class="song-item">
-                            <div id="player{{ song.yt_id.value }}" style="display: none;"></div>
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="song-info-box">
-                                       {% if not song.cover_art.value %}
-                                            <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/cd.png" alt="" style="width: 70px; height: 70px">
-                                       {% else %}
-                                            <img src="{{ song.cover_art.value }}" alt="">
-                                       {% endif %}
-                                        <div class="song-info">
-                                            <a href="{% url 'song' song.similar.value|cut:'http://SpotifyStats.com/spot/' %}">
-                                                <h4>{{ song.name.value }}</h4>
-                                            </a>
-                                            <a href="{% url 'artist' song.art.value|cut:'http://SpotifyStats.com/spot/' %}">
-                                                <p>{{ song.artist_name.value }}</p>
-                                            </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="single_player_container">
-                                        <div class="single_player row" style="padding-top: 0">
-                                            <!-- Player Controls -->
-                                            <div class="player_controls_box" style="width: 25%">
-                                                <button id="play" class="jp-play player_button"
-                                                        type="button"
-                                                        onclick="playVideo('{{ song.yt_id.value }}')"></button>
-                                                <button id="pause" class="jp-stop player_button"
-                                                        type="button"player_controls_box
-                                                        onclick="pauseVideo('{{ song.yt_id.value }}')"></button>
-                                            </div>
-                                            <!-- Progress Bar -->
-                                            <div class="player_bars" style="width: 75%; padding-left: 5%; padding-top: 4%">
-                                                <div class="row" >
-                                                <div class="w3-border" style="width: 100%">
-                                                    <div id="progress{{ song.yt_id.value }}" class="w3-grey"
-                                                         style="height:1px;width:0%">
-                                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="single_player_container">
+                                            <div class="single_player row" style="padding-top: 0">
+                                                <!-- Player Controls -->
+                                                <div class="player_controls_box" style="width: 25%">
+                                                    <button id="play" class="jp-play player_button"
+                                                            type="button"
+                                                            onclick="playVideo('{{ song.yt_id.value }}')"></button>
+                                                    <button id="pause" class="jp-stop player_button"
+                                                            type="button" player_controls_box
+                                                            onclick="pauseVideo('{{ song.yt_id.value }}')"></button>
                                                 </div>
-                                                </div>
-                                                <div class="row" style="padding-top: 1%">
-                                                    <div class="col align-self-start" style="padding-left: 0">
-                                                        <p id="curr_time{{ song.yt_id.value }}" style="font-size: 11px">0:00</p>
+                                                <!-- Progress Bar -->
+                                                <div class="player_bars" style="width: 75%; padding-left: 5%; padding-top: 4%">
+                                                    <div class="row" >
+                                                    <div class="w3-border" style="width: 100%">
+                                                        <div id="progress{{ song.yt_id.value }}" class="w3-grey"
+                                                             style="height:1px;width:0%">
+                                                        </div>
                                                     </div>
-                                                    <div class="col align-self-end" style="padding-right: 0">
-                                                        <p id="duration{{ song.yt_id.value }}"  style="font-size: 11px; text-align:right">0:00</p>
+                                                    </div>
+                                                    <div class="row" style="padding-top: 1%">
+                                                        <div class="col align-self-start" style="padding-left: 0">
+                                                            <p id="curr_time{{ song.yt_id.value }}" style="font-size: 11px">0:00</p>
+                                                        </div>
+                                                        <div class="col align-self-end" style="padding-right: 0">
+                                                            <p id="duration{{ song.yt_id.value }}"  style="font-size: 11px; text-align:right">0:00</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -147,13 +178,13 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
 
+                    </div>
                 </div>
-            </div>
-        </section>
-    {% endif %}
+            </section>
+        {% endif %}
+    </div>
     <script>
         var config = {
             type: 'polarArea',

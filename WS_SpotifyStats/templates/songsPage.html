@@ -34,25 +34,38 @@
                     style="padding-left: 0; margin-bottom: 50px;"
                 {% endif %}
             >
-                <div class="song-info-box" >
+                <div class="song-info-box"
+                     xmlns:spotc="http://SpotifyStats.com/spotc/"
+                     xmlns:spotp="http://SpotifyStats.com/spotp/"
+                     xmlns:dc="http://purl.org/dc/elements/1.1/"
+                     about="{{song.s.value}}"
+                     typeof="spotc:Song"
+                >
                     {% if not song.cover_art.value %}
                         <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/cd.png" alt="">
                     {% else %}
-                        <img src="{{ song.cover_art.value }}" alt="">
+                        <img property="spotp:cover_art" src="{{ song.cover_art.value }}" alt="">
                     {% endif %}
                     <div class="song-info" style="padding-top: 2%">
-                        <a href="{% url 'song'  song.s.value|cut:'http://SpotifyStats.com/spot/' %}" ><h4>{{ song.name.value}}</h4></a>
+                        <h4 property="dc:title"><a style="color: #0a183d" href="{% url 'song'  song.s.value|cut:'http://SpotifyStats.com/spot/' %}" >{{ song.name.value}}</a></h4>
                         {% with song.artists.value|split:"," as artist_uris %}
                             {% with song.artist_names.value|split:"," as artist_names %}
                                 <p><b><i class="fas fa-microphone-alt"></i> Artist: </b>
-                                    {% for artist_uri, artist_name in artist_uris|zip:artist_names %}
-                                        <a href="{% url 'artist'  artist_uri|cut:'http://SpotifyStats.com/spot/' %}" >{{artist_name}} </a>
-                                        {% if forloop.counter != artist_uris|length %}, {% endif %}
-                                    {% endfor %}
+
+                                    <span rel="spotp:artists" style="display: unset">
+                                        {% for artist_uri, artist_name in artist_uris|zip:artist_names %}
+                                            <span about="{{ artist_uri }}" style="display: unset"
+                                                  typeof="spotc:Artist"
+                                                  property="dc:title">
+                                                <a href="{% url 'artist'  artist_uri|cut:'http://SpotifyStats.com/spot/' %}" >{{artist_name}} </a>
+                                            </span>
+                                            {% if forloop.counter != artist_uris|length %}, {% endif %}
+                                        {% endfor %}
+                                    </span>
                                 </p>
                             {% endwith %}
                         {% endwith %}
-                        <p><b><i class="fas fa-fire"></i> Global Popularity: </b>{{ song.pop.value}}</p>
+                        <p><b><i class="fas fa-fire"></i> Global Popularity: </b><span property="spotp:popularity">{{ song.pop.value}}</span></p>
                     </div>
                 </div>
             </div>

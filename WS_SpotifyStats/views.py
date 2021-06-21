@@ -40,7 +40,9 @@ def song_page(request, id):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
 
-    res = describe_entity(basename + 'spot/' + id)
+    uri = basename + 'spot/' + id
+
+    res = describe_entity(uri)
 
     song_info = get_info(res)
 
@@ -88,6 +90,7 @@ def song_page(request, id):
     # print(song_info)
 
     tparams = {
+        'uri': uri,
         'song_info': song_info,
         'similar_songs':song_list_fix,
         'labels': labels,
@@ -129,7 +132,9 @@ def artist_page(request, id):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
 
-    res = describe_entity(basename + 'spot/' + id)
+    uri = basename + 'spot/' + id
+
+    res = describe_entity(uri)
     artist_info = get_info(res)
 
     res = get_artist_genres(artist_info['title'])
@@ -143,10 +148,6 @@ def artist_page(request, id):
     for song in most_popular_songs.keys():
         song_info = get_info(describe_entity(song))
         most_popular_songs_info[song] = song_info
-
-
-    print("\n")
-    print(most_popular_songs_info)
 
     labels = []
     data = []
@@ -186,6 +187,7 @@ def artist_page(request, id):
     seg = math.floor(duration_ms % 60000 / 1000) ;
 
     tparams = {
+        'uri': uri,
         'id': id,
         'res': res,
         'artist_info': artist_info,
@@ -221,7 +223,10 @@ def artists_page(request):
 
 
 def genre_page(request, id):
-    res = describe_entity(basename + 'spot/' + id)
+
+    uri = basename + 'spot/' + id
+
+    res = describe_entity(uri)
     genre_info = get_info(res)
 
     artists = get_artist_with_genre(id)
@@ -239,6 +244,7 @@ def genre_page(request, id):
             song_id_set.add(song['s']['value'])
 
     tparams = {
+        'uri': uri,
         'id': id,
         'genre_info': genre_info,
         'artists': artists,

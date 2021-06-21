@@ -33,9 +33,15 @@
                     style="margin-bottom: 50px;"
                 {% endif %}
             >
-                <div class="song-info" style="padding-top: 2%; background: #d0d7db; text-align: center; border-radius: 40px; height: 100px; display: flex; justify-content: center; align-content: center; flex-direction: column;">
-                    <a href="{% url 'genre' genre.s.value|cut:'http://SpotifyStats.com/spot/' %}" ><h4>{{ genre.name.value|capfirst}}</h4></a>
-                    <p style="padding-bottom: 0; margin-bottom: 0; padding-top: 5px;"><b><i class="fas fa-fire"></i> Global Popularity: </b>{{ genre.pop.value|slice:":4"}}</p>
+                <div class="song-info" style="padding-top: 2%; background: #d0d7db; text-align: center; border-radius: 40px; height: 100px; display: flex; justify-content: center; align-content: center; flex-direction: column;"
+                     xmlns:spotc="http://SpotifyStats.com/spotc/"
+                     xmlns:spotp="http://SpotifyStats.com/spotp/"
+                     xmlns:dc="http://purl.org/dc/elements/1.1/"
+                     about="{{genre.s.value}}"
+                     typeof="spotc:Genre"
+                >
+                    <h4 property="dc:title"><a style="color: #0a183d" href="{% url 'genre' genre.s.value|cut:'http://SpotifyStats.com/spot/' %}" >{{ genre.name.value|capfirst}}</a></h4>
+                    <p style="padding-bottom: 0; margin-bottom: 0; padding-top: 5px;"><b><i class="fas fa-fire"></i> Global Popularity: </b><span property="spotp:popularity">{{ genre.pop.value|slice:":4"}}</span></p>
                 </div>
             </div>
         {% endfor %}
