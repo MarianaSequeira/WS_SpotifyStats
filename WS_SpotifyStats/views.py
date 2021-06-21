@@ -12,11 +12,13 @@ basename = "http://SpotifyStats.com/"
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
-    song_count = get_elem_count("song")
-    artist_count = get_elem_count("artist")
-    genre_count = get_elem_count("genre")
+    song_count = get_elem_count("Song")
+    artist_count = get_elem_count("Artist")
+    genre_count = get_elem_count("Genre")
 
     songs = []
+
+    print(song_count)
 
     if request.method == 'POST':
         song = request.POST['song']
@@ -38,12 +40,13 @@ def song_page(request, id):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
 
-    res = describe_entity(basename + 'song/' + id)
+    res = describe_entity(basename + 'spot/' + id)
+
     song_info = get_info(res)
 
     insert_recent_song(id)
 
-    res = get_artist_name_by_id(song_info['artists'].replace("http://SpotifyStats.com/artist/", ""))
+    res = get_artist_name_by_id(song_info['artists'].replace("http://SpotifyStats.com/spot/", ""))
     artist_name = res[0]['name']['value']
 
     res = get_artist_genres(artist_name)
@@ -111,6 +114,8 @@ def songs_page(request):
         songs = get_most_popular_songs()
         title = "TOP 100"
 
+    print(songs)
+
     tparams = {
         'songs': songs,
         'title': title,
@@ -124,13 +129,13 @@ def artist_page(request, id):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
 
-    res = describe_entity(basename + 'artist/' + id)
+    res = describe_entity(basename + 'spot/' + id)
     artist_info = get_info(res)
 
-    res = get_artist_genres(artist_info['name'])
+    res = get_artist_genres(artist_info['title'])
     artist_genre_info = get_info(res)
 
-    res = get_most_popular_songs_of_artist(basename + 'artist/' + id)
+    res = get_most_popular_songs_of_artist(basename + 'spot/' + id)
     most_popular_songs = get_info(res)
 
     most_popular_songs_info = dict()
@@ -164,12 +169,12 @@ def artist_page(request, id):
     wikipedia_url = ""
 
     try:
-        page = wikipedia.page(artist_info['name'], auto_suggest=False)
+        page = wikipedia.page(artist_info['title'], auto_suggest=False)
         summary = page.summary[:400]
         wikipedia_url = page.url
     except Exception as e:
         try:
-            page = wikipedia.page(artist_info['name'], auto_suggest=True)
+            page = wikipedia.page(artist_info['title'], auto_suggest=True)
             summary = page.summary[:400]
             wikipedia_url = page.url
         except Exception as f:
@@ -216,7 +221,7 @@ def artists_page(request):
 
 
 def genre_page(request, id):
-    res = describe_entity(basename + 'genre/' + id)
+    res = describe_entity(basename + 'spot/' + id)
     genre_info = get_info(res)
 
     artists = get_artist_with_genre(id)
@@ -273,8 +278,8 @@ def get_info(res):
         stable_key = ""
         for count, key in enumerate(r.keys()):
             if count == 0:
-                stable_key = r[key]['value'].replace('http://SpotifyStats.com/pred/', '')
+                stable_key = r[key]['value'].replace('http://SpotifyStats.com/spotp/', '').replace("http://purl.org/dc/elements/1.1/","")
                 continue
-            info[stable_key] = r[key]['value'].replace('http://SpotifyStats.com/pred/', '')
+            info[stable_key] = r[key]['value'].replace('http://SpotifyStats.com/spotp/', '').replace("http://purl.org/dc/elements/1.1/","")
     return info
 

@@ -8,24 +8,24 @@ repo_name = "spotify"
 client = ApiClient(endpoint=endpoint)
 accessor = GraphDBApi(client)
 
-PREFIXES = """prefix rdf:<http://SpotifyStats.com/rdf/>
-prefix pred:<http://SpotifyStats.com/pred/>
-prefix song:<http://SpotifyStats.com/song/>
-prefix artist:<http://SpotifyStats.com/artist/>
-prefix genre:<http://SpotifyStats.com/genre/>
-prefix type:<http://SpotifyStats.com/type/>
-prefix w3:<http://www.w3.org/2001/XMLSchema#>"""
+PREFIXES = """PREFIX dc: <http://purl.org/dc/elements/1.1/> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#>   
+PREFIX foaf: <http://xmlns.com/foaf/0.1/> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX spot: <http://SpotifyStats.com/spot/> 
+PREFIX spotc: <http://SpotifyStats.com/spotc/> 
+PREFIX spotp: <http://SpotifyStats.com/spotp/> """
 
 
 def get_most_popular_songs():
     query = f"""{PREFIXES}
     select distinct ?s ?name ?pop ?cover_art (GROUP_CONCAT(DISTINCT ?artist; SEPARATOR=",") AS ?artists) (GROUP_CONCAT(DISTINCT ?artist_name ; SEPARATOR="," ) AS ?artist_names ) where {{
-        ?s pred:type type:song .
-        ?s pred:name ?name .
-        ?s pred:popularity ?pop .
-        ?s pred:artists ?artist . 
-        ?artist pred:name ?artist_name .
-            OPTIONAL{{ ?s pred:cover_art ?cover_art }}
+        ?s rdf:type spotc:Song .
+        ?s dc:title ?name .
+        ?s spotp:popularity ?pop .
+        ?s spotp:artists ?artist . 
+        ?artist dc:title ?artist_name .
+            OPTIONAL{{ ?s spotp:cover_art ?cover_art }}
     }} GROUP BY ?s ?pop ?name ?cover_art ORDER BY DESC(?pop) LIMIT 102"""
 
     payload_query = {"query": query}
@@ -38,15 +38,15 @@ def get_most_popular_songs():
 
 def get_songs_by_partial_name(name):
     query = f"""{PREFIXES}
-    select distinct * where {{
-        ?s pred:type type:song .
-        ?s pred:name ?name .
-        ?s pred:popularity ?pop .
-        ?s pred:artists ?artist . 
-        ?artist pred:name ?artist_name .
-        OPTIONAL {{ ?s pred:cover_art ?cover_art . }}
+    select distinct ?s ?name ?pop ?cover_art (GROUP_CONCAT(DISTINCT ?artist; SEPARATOR=",") AS ?artists) (GROUP_CONCAT(DISTINCT ?artist_name ; SEPARATOR="," ) AS ?artist_names ) where {{
+        ?s rdf:type spotc:Song .
+        ?s dc:title ?name .
+        ?s spotp:popularity ?pop .
+        ?s spotp:artists ?artist . 
+        ?artist dc:title ?artist_name .
+        OPTIONAL {{ ?s spotp:cover_art ?cover_art . }}
         filter regex(?name,"{name}", "i") 
-    }} ORDER BY DESC(?pop) limit 102 """
+    }} GROUP BY ?s ?pop ?name ?cover_art ORDER BY DESC(?pop) LIMIT 102 """
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
@@ -59,9 +59,9 @@ def get_songs_by_partial_name(name):
 def get_genre_by_partial_name(name):
     query = f"""{PREFIXES}
     select distinct * where {{
-        ?s pred:type type:genre .
-        ?s pred:name ?name .
-        ?s pred:popularity ?pop .
+        ?s rdf:type spotc:Genre .
+        ?s dc:title ?name .
+        ?s spotp:popularity ?pop .
         filter regex(?name,"{name}", "i") 
     }} ORDER BY DESC(?pop) limit 102 """
     payload_query = {"query": query}
@@ -76,9 +76,9 @@ def get_genre_by_partial_name(name):
 def get_artist_by_partial_name(name):
     query = f"""{PREFIXES}
     select distinct * where {{
-        ?s pred:type type:artist .
-        ?s pred:name ?name .
-        ?s pred:popularity ?pop .
+        ?s rdf:type spotc:Artist .
+        ?s dc:title ?name .
+        ?s spotp:popularity ?pop .
         filter regex(?name,"{name}", "i")
     }} limit 100 """
     payload_query = {"query": query}
@@ -93,12 +93,12 @@ def get_artist_by_partial_name(name):
 def get_artist_with_genre(genre):
     query = f"""{PREFIXES}
     select distinct * where {{
-        ?s pred:type type:artist .
-        ?s pred:genre genre:{genre} .
-        ?s pred:name ?name .
-        ?s pred:popularity ?pop .
-        ?s pred:count ?count .
-        OPTIONAL {{ ?s pred:face_photo ?face_photo }}
+        ?s rdf:type spotc:Artist .
+        ?s spotp:genre spot:{genre} .
+        ?s dc:title ?name .
+        ?s spotp:popularity ?pop .
+        ?s spotp:count ?count .
+        OPTIONAL {{ ?s spotp:face_photo ?face_photo }}
     }} ORDER BY DESC(?pop) limit 4"""
     payload_query = {"query": query}
 
@@ -112,10 +112,10 @@ def get_artist_with_genre(genre):
 def get_artist_genres(artist_name):
     query = f"""{PREFIXES}
     select distinct ?genre ?name where {{
-        ?s pred:type type:artist .
-        ?s pred:name "{artist_name}" .
-        ?s pred:genre ?genre .
-        ?genre pred:name ?name .
+        ?s rdf:type spotc:Artist .
+        ?s dc:title "{artist_name}" .
+        ?s spotp:genre ?genre .
+        ?genre dc:title ?name .
     }}"""
     payload_query = {"query": query}
 
@@ -129,12 +129,12 @@ def get_artist_genres(artist_name):
 def get_similar_songs_by_artists_genre(song_uri):
     query = f"""{PREFIXES}
     select distinct ?s ?name {{
-        <{song_uri}> pred:artists ?artist .
-        ?s pred:type type:song .
-        ?artist pred:genre ?genre .
-        ?s pred:artists ?art .
-        ?art pred:genre ?genre .
-        ?s pred:name ?name .
+        <{song_uri}> spotp:artists ?artist .
+        ?s rdf:type spotc:Song .
+        ?artist spotp:genre ?genre .
+        ?s spotp:artists ?art .
+        ?art spotp:genre ?genre .
+        ?s dc:title ?name .
         filter(?s != <{song_uri}>)
     }} limit 20"""
     payload_query = {"query": query}
@@ -149,9 +149,9 @@ def get_similar_songs_by_artists_genre(song_uri):
 def get_name_of_artists_by_genre(genre_uri):
     query = f"""{PREFIXES}
     select ?s ?name where {{
-        ?s pred:type type:artist .
-        ?s pred:genre <{genre_uri}> .
-        ?s pred:name ?name
+        ?s rdf:type spotc:Artist .
+        ?s spotp:genre <{genre_uri}> .
+        ?s dc:title ?name
     }}"""
     payload_query = {"query": query}
 
@@ -165,10 +165,10 @@ def get_name_of_artists_by_genre(genre_uri):
 def get_name_of_artists_by_genre_name(genre_name):
     query = f"""{PREFIXES}
     select ?s ?name where {{
-        ?s pred:type type:artist .
-        ?genre pred:name "{genre_name}" . 
-        ?s pred:genre ?genre .
-        ?s pred:name ?name
+        ?s rdf:type spotc:Artist .
+        ?genre dc:title "{genre_name}" . 
+        ?s spotp:genre ?genre .
+        ?s dc:title ?name
     }}"""
     payload_query = {"query": query}
 
@@ -183,8 +183,8 @@ def get_most_popular_songs_of_artist(artist_uri):
     query = f"""{PREFIXES}
     select distinct * 
     where {{
-        ?s pred:artists <{artist_uri}> .
-        ?s pred:popularity ?pop
+        ?s spotp:artists <{artist_uri}> .
+        ?s spotp:popularity ?pop
     }}  
     ORDER BY DESC(?pop) LIMIT 3"""
     payload_query = {"query": query}
@@ -199,9 +199,9 @@ def get_most_popular_songs_of_artist(artist_uri):
 def get_most_popular_artists():
     query = f"""{PREFIXES}
         select distinct * where {{
-            ?s pred:type type:artist .
-            ?s pred:name ?name .
-            ?s pred:popularity ?pop .
+            ?s rdf:type spotc:Artist .
+            ?s dc:title ?name .
+            ?s spotp:popularity ?pop .
         }}  ORDER BY DESC(?pop) LIMIT 100
         """
     payload_query = {"query": query}
@@ -217,7 +217,7 @@ def get_songs_by_artist(artist_uri):
     query = f"""{PREFIXES}
     select distinct * 
     where {{
-        ?s pred:artists <{artist_uri}> .
+        ?s spotp:artists <{artist_uri}> .
     }}"""
     payload_query = {"query": query}
 
@@ -232,7 +232,7 @@ def get_artist_name_by_id(id):
     query = f"""{PREFIXES}
     SELECT ?name 
     WHERE {{ 
-        artist:{id} pred:name ?name
+        spot:{id} dc:title ?name
     }}
     """
     payload_query = {"query": query}
@@ -248,9 +248,9 @@ def get_all_genres():
     query = f"""{PREFIXES}
     select distinct *
     where {{
-        ?s pred:type type:genre .
-        ?s pred:name ?name .
-        ?s pred:popularity ?pop .
+        ?s rdf:type spotc:Genre .
+        ?s dc:title ?name .
+        ?s spotp:popularity ?pop .
     }}  
     ORDER BY DESC(?pop) limit 102"""
     payload_query = {"query": query}
@@ -277,13 +277,13 @@ def get_most_popular_songs_by_genre(genre_id):
     query = f"""{PREFIXES}
     select distinct *
     where {{
-        ?s pred:artists ?art .
-        ?art pred:genre genre:{genre_id} .
-        ?s pred:popularity ?pop .
-        ?s pred:name ?name .
-        ?art pred:name ?artist_name . 
-        OPTIONAL {{ ?s pred:yt_id ?yt_id . }}
-        OPTIONAL {{ ?s pred:cover_art ?cover_art . }}
+        ?s spotp:artists ?art .
+        ?art spotp:genre spot:{genre_id} .
+        ?s spotp:popularity ?pop .
+        ?s dc:title ?name .
+        ?art dc:title ?artist_name . 
+        OPTIONAL {{ ?s spotp:yt_id ?yt_id . }}
+        OPTIONAL {{ ?s spotp:cover_art ?cover_art . }}
     }}  
     ORDER BY DESC(?pop) limit 5"""
 
@@ -299,12 +299,12 @@ def get_most_popular_songs_by_genre(genre_id):
 def get_similar_songs(song_id):
     query = f"""{PREFIXES}
     select * where {{ 
-        song:{song_id} pred:similar ?similar .
-        ?similar pred:artists ?art .
-        ?similar pred:name ?name .
-        ?art pred:name ?artist_name .
-        OPTIONAL{{ ?similar pred:yt_id ?yt_id}}
-        OPTIONAL{{ ?similar pred:cover_art ?cover_art}}
+        spot:{song_id} spotp:similar ?similar .
+        ?similar spotp:artists ?art .
+        ?similar dc:title ?name .
+        ?art dc:title ?artist_name .
+        OPTIONAL{{ ?similar spotp:yt_id ?yt_id}}
+        OPTIONAL{{ ?similar spotp:cover_art ?cover_art}}
     }}"""
 
     payload_query = {"query": query}
@@ -319,8 +319,10 @@ def get_similar_songs(song_id):
 def get_elem_count(elem):
     query = f"""{PREFIXES}
     select (Count(?s) as ?cnt) where {{ 
-        ?s pred:type type:{elem} . 
+        ?s rdf:type spotc:{elem} . 
     }} """
+
+    print(query)
 
     payload_query = {"query": query}
 
@@ -334,10 +336,10 @@ def get_elem_count(elem):
 def get_song_by_name_artist_genres(song_name, artist_name, genre_list):
     genre_template_query = """
     {
-        ?genre pred:type type:genre .
-        ?art pred:genre ?genre .
-        ?s pred:artists ?art .
-        ?genre pred:name ?genre_name .
+        ?genre rdf:type spotc:Genre .
+        ?art spotp:genre ?genre .
+        ?s spotp:artists ?art .
+        ?genre dc:title ?genre_name .
         filter (lcase(?genre_name)="REPLACEHERE")
     }"""
     genre_query = ""
@@ -355,16 +357,16 @@ def get_song_by_name_artist_genres(song_name, artist_name, genre_list):
     
     select distinct ?s ?name ?pop ?cover_art (GROUP_CONCAT(DISTINCT ?art; SEPARATOR=", ") AS ?artists) (GROUP_CONCAT(DISTINCT ?art_name; SEPARATOR=", ") AS ?artist_names) where {{
         {{
-            ?s pred:type type:song ;
-                pred:name ?name ;
-                pred:popularity ?pop .
-                OPTIONAL {{ ?s pred:cover_art ?cover_art . }}
+            ?s rdf:type spotc:Song ;
+                dc:title ?name ;
+                spotp:popularity ?pop .
+                OPTIONAL {{ ?s spotp:cover_art ?cover_art . }}
             filter regex(?name, "{song_name}", "i")
         }}
         {{
-            ?art pred:type type:artist ;
-                 pred:name ?art_name .
-            ?s pred:artists ?art .
+            ?art rdf:type spotc:Artist ;
+                 dc:title ?art_name .
+            ?s spotp:artists ?art .
             filter regex(?art_name, "{artist_name}", "i")
         }}
         {genre_query}
@@ -382,10 +384,10 @@ def insert_recent_song(song_id):
     last_seen = int(time.time())
 
     query = f"""{PREFIXES}
-    delete {{ ?s pred:last_seen ?o . }}
-    insert {{ ?s pred:last_seen {last_seen} . }}
+    delete {{ ?s spotp:last_seen ?o . }}
+    insert {{ ?s spotp:last_seen {last_seen} . }}
     where{{ 
-        OPTIONAL {{ ?s pred:last_seen ?o . }}
+        OPTIONAL {{ ?s spotp:last_seen ?o . }}
         values ?s {{ <http://SpotifyStats.com/song/{song_id}> }}
     }} """
 
@@ -398,12 +400,12 @@ def insert_recent_song(song_id):
 def get_last_seen_songs():
     query = f"""{PREFIXES}
     select ?s ?cover_art ?name ?pop (GROUP_CONCAT(DISTINCT ?art; SEPARATOR=", ") AS ?artists) (GROUP_CONCAT(DISTINCT ?art_name; SEPARATOR=", ") AS ?artist_names) where {{
-        ?s pred:last_seen ?p ;
-           pred:name ?name ;
-           pred:artists ?art ;
-           pred:popularity ?pop .
-        ?art pred:name ?art_name .
-        OPTIONAL {{ ?s pred:cover_art ?cover_art }}
+        ?s spotp:last_seen ?p ;
+           dc:title ?name ;
+           spotp:artists ?art ;
+           spotp:popularity ?pop .
+        ?art dc:title ?art_name .
+        OPTIONAL {{ ?s spotp:cover_art ?cover_art }}
     }} GROUP BY ?s ?name ?cover_art ?pop ORDER BY DESC(?p) LIMIT 3
     """
 

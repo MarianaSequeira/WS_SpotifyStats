@@ -41,12 +41,12 @@
                         <img src="{{ song.cover_art.value }}" alt="">
                     {% endif %}
                     <div class="song-info" style="padding-top: 2%">
-                        <a href="{% url 'song'  song.s.value|cut:'http://SpotifyStats.com/song/' %}" ><h4>{{ song.name.value}}</h4></a>
+                        <a href="{% url 'song'  song.s.value|cut:'http://SpotifyStats.com/spot/' %}" ><h4>{{ song.name.value}}</h4></a>
                         {% with song.artists.value|split:"," as artist_uris %}
                             {% with song.artist_names.value|split:"," as artist_names %}
                                 <p><b><i class="fas fa-microphone-alt"></i> Artist: </b>
                                     {% for artist_uri, artist_name in artist_uris|zip:artist_names %}
-                                        <a href="{% url 'artist'  artist_uri|cut:'http://SpotifyStats.com/artist/' %}" >{{artist_name}} </a>
+                                        <a href="{% url 'artist'  artist_uri|cut:'http://SpotifyStats.com/spot/' %}" >{{artist_name}} </a>
                                         {% if forloop.counter != artist_uris|length %}, {% endif %}
                                     {% endfor %}
                                 </p>
@@ -91,12 +91,12 @@
                             <img src="{{ song.cover_art.value }}" alt="">
                         {% endif %}
                         <div class="song-info" style="padding-top: 2%">
-                            <a href="{% url 'song'  song.s.value|cut:'http://SpotifyStats.com/song/' %}" ><h4>{{ song.name.value}}</h4></a>
+                            <a href="{% url 'song'  song.s.value|cut:'http://SpotifyStats.com/spot/' %}" ><h4>{{ song.name.value}}</h4></a>
                             {% with song.artists.value|split:"," as artist_uris %}
                                 {% with song.artist_names.value|split:"," as artist_names %}
                                     <p><b><i class="fas fa-microphone-alt"></i> Artist: </b>
                                         {% for artist_uri, artist_name in artist_uris|zip:artist_names %}
-                                            <a href="{% url 'artist'  artist_uri|cut:'http://SpotifyStats.com/artist/' %}" >{{artist_name}} </a>
+                                            <a href="{% url 'artist'  artist_uri|cut:'http://SpotifyStats.com/spot/' %}" >{{artist_name}} </a>
                                             {% if forloop.counter != artist_uris|length %}, {% endif %}
                                         {% endfor %}
                                     </p>

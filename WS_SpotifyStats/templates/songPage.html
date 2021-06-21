@@ -26,14 +26,14 @@
                         </div>
                         <div class="wave-player-warp" style="padding-top: 0px">
                             <div class="wave-player-info">
-                                <h2>{{ song_info.name }}</h2>
+                                <h2>{{ song_info.title }}</h2>
                             </div>
                             <div class="row" style="padding-top: 47px">
                                 <div class="col-5">
                                     <ul>
                                         {% if artist_name %}
                                             <li style="list-style: none">
-                                                <strong>Artist:</strong><a href="{% url 'artist' song_info.artists|cut:'http://SpotifyStats.com/artist/' %}"><span> {{ artist_name }}</span></a>
+                                                <strong>Artist:</strong><a href="{% url 'artist' song_info.artists|cut:'http://SpotifyStats.com/spot/' %}"><span> {{ artist_name }}</span></a>
                                             </li>
                                         {% endif %}
                                         {% if song_info.release_date %}
@@ -46,7 +46,7 @@
                                                 <strong>Genre:</strong>
                                                 <span>
                                                     {% for k, v in artist_genre_info.items %}
-                                                        <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/genre/' %}">{{v|capfirst}}</a>
+                                                        <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/spot/' %}">{{v|capfirst}}</a>
                                                         {% if forloop.counter != artist_genre_info|length %}, {% endif %}
                                                     {% endfor %}
                                                 </span>
@@ -104,10 +104,10 @@
                                             <img src="{{ song.cover_art.value }}" alt="">
                                        {% endif %}
                                         <div class="song-info">
-                                            <a href="{% url 'song' song.similar.value|cut:'http://SpotifyStats.com/song/' %}">
+                                            <a href="{% url 'song' song.similar.value|cut:'http://SpotifyStats.com/spot/' %}">
                                                 <h4>{{ song.name.value }}</h4>
                                             </a>
-                                            <a href="{% url 'artist' song.art.value|cut:'http://SpotifyStats.com/artist/' %}">
+                                            <a href="{% url 'artist' song.art.value|cut:'http://SpotifyStats.com/spot/' %}">
                                                 <p>{{ song.artist_name.value }}</p>
                                             </a>
                                         </div>

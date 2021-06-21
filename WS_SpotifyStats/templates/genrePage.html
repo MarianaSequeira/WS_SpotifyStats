@@ -6,14 +6,14 @@
     <!-- Category section -->
     <section class="category-section spad" style="padding-bottom: 0">
         <div class="container-fluid">
-            {% if genre_info.name|capfirst|length < 5%}
+            {% if genre_info.title|capfirst|length < 5%}
                 <div class="section-title" style="width: 400px">
-                    <h2>{{ genre_info.name|capfirst }}</h2>
+                    <h2>{{ genre_info.title|capfirst }}</h2>
                     <h5 id="subtitle" style="padding-left: 1.5%; padding-top: 2%">TOP Artists and Songs</h5>
                 </div>
             {% else %}
                 <div class="section-title">
-                    <h2>{{ genre_info.name|capfirst }}</h2>
+                    <h2>{{ genre_info.title|capfirst }}</h2>
                     <h5 id="subtitle" style="padding-left: 1.5%; padding-top: 2%">TOP Artists and Songs</h5>
                 </div>
             {% endif %}
@@ -35,7 +35,7 @@
                                     <img src="{{ artist.face_photo.value }}" alt="">
                                {% endif %}
                                 <div class="ci-text">
-                                    <a href="{% url 'artist' artist.s.value|cut:'http://SpotifyStats.com/artist/' %}">
+                                    <a href="{% url 'artist' artist.s.value|cut:'http://SpotifyStats.com/spot/' %}">
                                         <h4>{{ artist.name.value }}</h4></a>
                                     <p><b>Number of songs: </b> {{ artist.count.value }} </p>
                                     <p><b>Global Popularity: </b> {{ artist.pop.value|slice:4 }} </p>
@@ -67,10 +67,10 @@
                                     <img src="{{ song.cover_art.value }}" alt="">
                                {% endif %}
                                 <div class="song-info">
-                                    <a href="{% url 'song' song.s.value|cut:'http://SpotifyStats.com/song/' %}">
+                                    <a href="{% url 'song' song.s.value|cut:'http://SpotifyStats.com/spot/' %}">
                                         <h4>{{ song.name.value }}</h4>
                                     </a>
-                                    <a href="{% url 'artist' song.art.value|cut:'http://SpotifyStats.com/artist/' %}">
+                                    <a href="{% url 'artist' song.art.value|cut:'http://SpotifyStats.com/spot/' %}">
                                         <p>{{ song.artist_name.value }}</p>
                                     </a>
                                 </div>

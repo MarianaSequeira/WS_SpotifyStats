@@ -17,7 +17,7 @@
                 <div class="row">
                     <div class="col-lg-8">
                         <div class="wave-player-info">
-                            <h2>{{ artist_info.name }}</h2>
+                            <h2>{{ artist_info.title }}</h2>
                             <p style="text-align:justify; margin-top: 30px; font-size: 15px"> {{ summary }}...</p>
                             {% if wikipedia_url != "" %}
                                 <p style="font-size: 13px"><i>Source: <a href="{{ wikipedia_url }}">Wikipedia</a></i></p>
@@ -44,7 +44,7 @@
                                     <strong>Genre:</strong>
                                     <span>
                                         {% for k, v in artist_genre_info.items %}
-                                            <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/genre/' %}">{{ v|capfirst }}</a>
+                                            <a href="{% url 'genre' k|cut:'http://SpotifyStats.com/spot/' %}">{{ v|capfirst }}</a>
                                             {% if forloop.counter != artist_genre_info|length %}, {% endif %}
                                         {% endfor %}
                                     </span>
@@ -96,8 +96,8 @@
 
                                                     <div class="song-info">
                                                         <h4>
-                                                            <a href="{% url 'song' song|cut:'http://SpotifyStats.com/song/' %}"
-                                                               style="color:#0a183d">{{ songInfo.name }}</a></h4>
+                                                            <a href="{% url 'song' song|cut:'http://SpotifyStats.com/spot/' %}"
+                                                               style="color:#0a183d">{{ songInfo.title }}</a></h4>
                                                         <p><i class="fas fa-fire"></i><b> Global
                                                             Popularity: </b>{{ songInfo.popularity }}</p>
                                                     </div>
