@@ -26,7 +26,7 @@
                             <div class="wave-player-info">
                                 <h2 property="dc:title">{{ artist_info.title }}</h2>
                                 <p property="spotp:wiki_summary" style="text-align:justify; margin-top: 30px; font-size: 15px"> {{ summary }}...</p>
-                                {% if wikipedia_url != "" %}
+                                {% if wikipedia_url != None %}
                                     <p style="font-size: 13px"><i>Source: <a href="{{ wikipedia_url }}">Wikipedia</a></i></p>
                                 {% endif %}
                             </div>

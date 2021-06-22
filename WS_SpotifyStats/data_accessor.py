@@ -2,9 +2,10 @@ import json
 from s4api.graphdb_api import GraphDBApi
 from s4api.swagger import ApiClient
 import time
+import WS_SpotifyStats.wikidata_dbpedia as wikidata_dbpedia
 
 endpoint = "http://localhost:7200"
-repo_name = "spotify"
+repo_name = "spotify_testing"
 client = ApiClient(endpoint=endpoint)
 accessor = GraphDBApi(client)
 
@@ -35,6 +36,7 @@ def get_most_popular_songs():
     res = json.loads(res)
 
     return res['results']['bindings']
+
 
 def get_songs_by_partial_name(name):
     query = f"""{PREFIXES}
@@ -98,7 +100,6 @@ def get_artist_with_genre(genre):
         ?s dc:title ?name .
         ?s spotp:popularity ?pop .
         ?s spotp:count ?count .
-        OPTIONAL {{ ?s spotp:face_photo ?face_photo }}
     }} ORDER BY DESC(?pop) limit 4"""
     payload_query = {"query": query}
 
@@ -322,7 +323,6 @@ def get_elem_count(elem):
         ?s rdf:type spotc:{elem} . 
     }} """
 
-    print(query)
 
     payload_query = {"query": query}
 
@@ -347,7 +347,8 @@ def get_song_by_name_artist_genres(song_name, artist_name, genre_list):
         genre_query += "{"
         for count, genre_name in enumerate(genre_list):
             genre_name = genre_name.strip()
-            genre_query += genre_template_query.replace("REPLACEHERE", genre_name)
+            genre_query += genre_template_query.replace(
+                "REPLACEHERE", genre_name)
             if count < (len(genre_list)-1):
                 genre_query += "\nUNION"
             if count == (len(genre_list) - 1):
@@ -395,8 +396,6 @@ def insert_recent_song(song_id):
     res = accessor.sparql_update(body=payload_query, repo_name=repo_name)
 
 
-
-
 def get_last_seen_songs():
     query = f"""{PREFIXES}
     select ?s ?cover_art ?name ?pop (GROUP_CONCAT(DISTINCT ?art; SEPARATOR=", ") AS ?artists) (GROUP_CONCAT(DISTINCT ?art_name; SEPARATOR=", ") AS ?artist_names) where {{
@@ -416,3 +415,110 @@ def get_last_seen_songs():
     res = json.loads(res)
 
     return res['results']['bindings']
+
+
+def get_artist_image(artist_uri):
+    query = f"""{PREFIXES}
+    ASK {{ 
+        {artist_uri} spotp:face_photo ?o .
+    }}
+    """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    if json.loads(res)['boolean']:
+        return select_face_photo(artist_uri)[0]['o']['value']
+    else:
+        return insert_face_photo(artist_uri)
+
+
+def select_face_photo(artist_uri):
+    query = f"""{PREFIXES}
+    Select ?o where {{ 
+        {artist_uri} spotp:face_photo ?o .
+    }}
+    """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+def insert_face_photo(artist_uri):
+    artist_name = get_artist_name(artist_uri)[0]['o']['value']
+    entity_id = wikidata_dbpedia.get_entity_id(artist_name)
+    image_url = wikidata_dbpedia.get_wikidata_image(entity_id)
+    if image_url:
+        insert = f"""{PREFIXES}
+        insert data {{ {artist_uri} spotp:face_photo "{image_url}" . }}
+        """
+        payload_query = {"update": insert}
+        res = accessor.sparql_update(body=payload_query, repo_name=repo_name)
+        return image_url
+    return None
+
+
+def get_artist_name(artist_uri):
+    query = f"""{PREFIXES}
+    Select ?o where {{ 
+        {artist_uri} dc:title ?o .
+    }}
+    """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+def get_artist_comment(artist_uri):
+    query = f"""{PREFIXES}
+    ASK {{ 
+        {artist_uri} spotp:comment ?o .
+    }}
+    """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    if json.loads(res)['boolean']:
+        return select_comment(artist_uri)[0]['o']['value']
+    else:
+        return insert_comment(artist_uri)
+
+
+def select_comment(artist_uri):
+    query = f"""{PREFIXES}
+    Select ?o where {{ 
+        {artist_uri} spotp:comment ?o .
+    }}
+    """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+def insert_comment(artist_uri):
+    artist_name = get_artist_name(artist_uri)[0]['o']['value']
+    entity_id = wikidata_dbpedia.get_entity_id(artist_name)
+    comment = wikidata_dbpedia.get_dbpedia_comment(entity_id, artist_name)
+    if comment:
+        insert = f"""{PREFIXES}
+        insert data {{ {artist_uri} spotp:comment {comment} . }}
+        """
+        payload_query = {"update": insert}
+        res = accessor.sparql_update(body=payload_query, repo_name=repo_name)
+        return comment
+    return None
+
+

@@ -3,7 +3,6 @@ import math
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from WS_SpotifyStats.data_accessor import *
-import wikipedia
 import time
 
 basename = "http://SpotifyStats.com/"
@@ -17,8 +16,6 @@ def home(request):
     genre_count = get_elem_count("Genre")
 
     songs = []
-
-    print(song_count)
 
     if request.method == 'POST':
         song = request.POST['song']
@@ -87,8 +84,6 @@ def song_page(request, id):
     min = math.floor(duration_ms / 60000)
     seg = math.floor(duration_ms % 60000 / 1000);
 
-    # print(song_info)
-
     tparams = {
         'uri': uri,
         'song_info': song_info,
@@ -107,7 +102,6 @@ def songs_page(request):
     assert isinstance(request, HttpRequest)
 
     recent_songs = get_last_seen_songs()
-    print(recent_songs)
 
     if request.method == 'POST':
         search = request.POST['search']
@@ -117,7 +111,6 @@ def songs_page(request):
         songs = get_most_popular_songs()
         title = "TOP 100"
 
-    print(songs)
 
     tparams = {
         'songs': songs,
@@ -166,25 +159,18 @@ def artist_page(request, id):
 
     labels.append('Valence')
     data.append("{:.2f}".format(float(artist_info.get('valence'))))
-    summary = "No artist information available"
-    wikipedia_url = ""
+    summary = get_artist_comment(f"spot:{id}")
+    if not summary:
+        summary = "No artist information available"
 
-    try:
-        page = wikipedia.page(artist_info['title'], auto_suggest=False)
-        summary = page.summary[:400]
-        wikipedia_url = page.url
-    except Exception as e:
-        try:
-            page = wikipedia.page(artist_info['title'], auto_suggest=True)
-            summary = page.summary[:400]
-            wikipedia_url = page.url
-        except Exception as f:
-            pass
-        pass
 
     duration_ms = float(artist_info['duration_ms'])
     min = math.floor(duration_ms / 60000)
     seg = math.floor(duration_ms % 60000 / 1000) ;
+
+    face_photo = get_artist_image(f"spot:{id}")
+    if face_photo:
+        artist_info['face_photo'] = face_photo
 
     tparams = {
         'uri': uri,
@@ -195,7 +181,6 @@ def artist_page(request, id):
         'most_popular_songs_info': most_popular_songs_info,
         'labels': labels,
         'summary': summary,
-        'wikipedia_url': wikipedia_url,
         'data': data,
         'duration': str(min) + ' min and ' + str(seg) + ' sec'
     }
@@ -231,7 +216,6 @@ def genre_page(request, id):
 
     artists = get_artist_with_genre(id)
 
-    print(artists)
 
     song_info = get_most_popular_songs_by_genre(id)
 
@@ -242,7 +226,13 @@ def genre_page(request, id):
         if song['s']['value'] not in song_id_set:
             song_list_fix.append(song)
             song_id_set.add(song['s']['value'])
-
+    
+    for artist in artists:
+        artist_id = artist['s']['value'].replace("http://SpotifyStats.com/spot/", "")
+        face_photo = get_artist_image(f"spot:{artist_id}")
+        if face_photo:
+            artist['face_photo'] = face_photo
+    
     tparams = {
         'uri': uri,
         'id': id,
@@ -258,7 +248,7 @@ def genres_page(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
 
-    print(request)
+
 
     if request.method == 'POST':
         search = request.POST['search']
@@ -267,8 +257,6 @@ def genres_page(request):
     else:
         genres = get_all_genres()
         title = "Genres"
-
-    print(genres)
 
     tparams = {
         'ola': "ola",
