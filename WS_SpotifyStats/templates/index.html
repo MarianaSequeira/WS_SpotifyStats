@@ -107,7 +107,7 @@
                                         {% with song.artist_names.value|split:"," as artist_names %}
                                             <p><b><i class="fas fa-microphone-alt"></i>Artist: </b>
                                                 {% for artist_uri, artist_name in artist_uris|zip:artist_names %}
-                                                    <div rel="spopt:artists">
+                                                    <span rel="spopt:artists">
                                                         <span about="{{ artist_uri }}"
                                                               typeof="spotc:Artist"
                                                               property="dc:title">
@@ -115,7 +115,7 @@
                                                         </span>
                                                         {% if forloop.counter != artist_uris|length %}, {% endif %}
 
-                                                    </div>
+                                                    </span>
                                                 {% endfor %}
                                             </p>
                                         {% endwith %}

@@ -388,7 +388,7 @@ def insert_recent_song(song_id):
     insert {{ ?s spotp:last_seen {last_seen} . }}
     where{{ 
         OPTIONAL {{ ?s spotp:last_seen ?o . }}
-        values ?s {{ <http://SpotifyStats.com/song/{song_id}> }}
+        values ?s {{ <http://SpotifyStats.com/spot/{song_id}> }}
     }} """
 
     payload_query = {"update": query}

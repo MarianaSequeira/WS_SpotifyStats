@@ -80,14 +80,18 @@
                 </div>
             {% endfor %}
         </div>
-
-
     </div>
 
+     <div class="container">
+        <div class="row">
+            <div class="col align-self-center" style="text-align: center; padding-bottom: 60px">
+                <button onclick=showAll() style="background: #fc0254; height: 60px;  min-width: 167px; right: 0; top: 0; border: none; border-radius: 80px; color: #fff; font-size: 15px;">Show All</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        function redirectPost( args)
-        {
+        function redirectPost( args) {
             var form = $('<form></form>');
             form.attr("method", "post");
             form.attr("action", ".");
@@ -106,6 +110,13 @@
             $(form).appendTo('body').submit();
         }
 
+        function showAll() {
+            var x = document.getElementsByClassName("song");
+            Array.prototype.forEach.call(x, function(el) {
+                // Do stuff here
+                el.style.display = null
+            });
+        }
     </script>
 
 {% endblock %}
