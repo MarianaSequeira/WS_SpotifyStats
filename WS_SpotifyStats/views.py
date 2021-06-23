@@ -270,6 +270,32 @@ def genres_page(request):
     return render(request, 'genresPage.html', tparams)
 
 
+def decades(request):
+    assert isinstance(request, HttpRequest)
+    info = {}
+    ranges = list(range(1920, 2030, 10))
+    decadesName = ["Twenties", "Thirties", "Forties", "Fifties", "Sixties", "Seventies", "Eighties", "Nineties", "TwoThousands", "TwentyTens"]
+    decadesYear = ["1920s", "1930s", "1940s", "1950s", "1960s", "1970s", "1980s", "1990s", "2000s", "2010s"]
+
+    for count, name in enumerate(decadesName):
+        info[name] = (ranges[count], ranges[count + 1])
+
+    if request.method == 'POST':
+        decade = request.POST['decade']
+    else:
+        decade = "Twenties"
+
+    songs = get_songs_by_decade(info[decade][0], info[decade][1], decade)
+
+    tparams = {
+        "songs": songs,
+        "decade": decade,
+        "decadesName": decadesName,
+        "decadesYear": decadesYear
+    }
+    return render(request, 'decadesPage.html', tparams)
+
+
 def get_info(res):
     info = dict()
     for r in res:

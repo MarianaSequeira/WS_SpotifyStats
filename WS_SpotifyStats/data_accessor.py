@@ -5,7 +5,7 @@ import time
 import WS_SpotifyStats.wikidata_dbpedia as wikidata_dbpedia
 
 endpoint = "http://localhost:7200"
-repo_name = "spotify_testing"
+repo_name = "spotify"
 client = ApiClient(endpoint=endpoint)
 accessor = GraphDBApi(client)
 
@@ -616,10 +616,15 @@ def insert_decade(lower, higher, decade_name):
 
 def select_decade(decade_name):
     query = f"""{PREFIXES}
-    SELECT * WHERE {{
-        ?s a spotc:{decade_name} .
-    }}
-    """
+       select distinct ?s ?name ?pop ?cover_art (GROUP_CONCAT(DISTINCT ?artist; SEPARATOR=",") AS ?artists) (GROUP_CONCAT(DISTINCT ?artist_name ; SEPARATOR="," ) AS ?artist_names ) where {{
+           ?s a spotc:{decade_name} .
+           ?s dc:title ?name .
+           ?s spotp:popularity ?pop .
+           ?s spotp:artists ?artist . 
+           ?artist dc:title ?artist_name .
+               OPTIONAL{{ ?s spotp:cover_art ?cover_art }}
+       }} GROUP BY ?s ?pop ?name ?cover_art ORDER BY DESC(?pop) LIMIT 102"""
+
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)

@@ -1,0 +1,111 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load split %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12" style="padding-left: 0; padding-right: 0">
+                <div class="card">
+                    <div class="card-body" style="margin-top: 5%">
+                        <div class="hori-timeline" dir="ltr">
+                            <ul class="list-inline events row">
+                                {% for year, name in decadesYear|zip:decadesName %}
+                                    <li class="list-inline-item event-list col">
+                                        <div class="event-date bg-soft-danger text-danger">{{ year }}</div>
+                                        <a href="#" onclick="redirectPost({'decade' : '{{ name }}'})"><h5 class="font-size-16">{{ name }}</h5></a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" style="margin-left: 3%; margin-right: 2%; margin-top: 5%">
+
+        <h2>Selected Decade: <span style="color: #fc0254">{{ decade }}</span></h2>
+
+        <div class="row" style="margin-top: 3%; margin-left: 1%; margin-right: 1%;">
+            {% for song in songs %}
+                <div class="col-4 song"
+                        {% if forloop.counter > 15 %}
+                     style="padding-left: 0; margin-bottom: 50px; display: none"
+                        {% else %}
+                     style="padding-left: 0; margin-bottom: 50px;"
+                        {% endif %}
+                >
+                    <div class="song-info-box"
+                         xmlns:spotc="http://SpotifyStats.com/spotc/"
+                         xmlns:spotp="http://SpotifyStats.com/spotp/"
+                         xmlns:dc="http://purl.org/dc/elements/1.1/"
+                         about="{{ song.s.value }}"
+                         typeof="spotc:Song"
+                    >
+                        {% if not song.cover_art.value %}
+                            <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/cd.png"
+                                 alt="">
+                        {% else %}
+                            <img property="spotp:cover_art" src="{{ song.cover_art.value }}" alt="">
+                        {% endif %}
+                        <div class="song-info" style="padding-top: 2%">
+                            <h4 property="dc:title"><a style="color: #0a183d"
+                                                       href="{% url 'song'  song.s.value|cut:'http://SpotifyStats.com/spot/' %}">{{ song.name.value }}</a>
+                            </h4>
+                            {% with song.artists.value|split:"," as artist_uris %}
+                                {% with song.artist_names.value|split:"," as artist_names %}
+                                    <p><b><i class="fas fa-microphone-alt"></i> Artist: </b>
+                                        <span rel="spotp:artists" style="display: unset">
+                                        {% for artist_uri, artist_name in artist_uris|zip:artist_names %}
+                                            <span about="{{ artist_uri }}" style="display: unset"
+                                                  typeof="spotc:Artist"
+                                                  property="dc:title">
+                                                <a href="{% url 'artist'  artist_uri|cut:'http://SpotifyStats.com/spot/' %}">{{ artist_name }} </a>
+                                            </span>
+                                            {% if forloop.counter != artist_uris|length %}, {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    </p>
+                                {% endwith %}
+                            {% endwith %}
+                            <p><b><i class="fas fa-fire"></i> Global Popularity: </b><span
+                                    property="spotp:popularity">{{ song.pop.value }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+
+    </div>
+
+
+    <script>
+        function redirectPost( args)
+        {
+            var form = $('<form></form>');
+            form.attr("method", "post");
+            form.attr("action", ".");
+
+            form.append("<input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' >")
+
+            $.each( args, function( key, value ) {
+                var field = $('<input></input>');
+
+                field.attr("type", "hidden");
+                field.attr("name", key);
+                field.attr("value", value);
+
+                form.append(field);
+            });
+            $(form).appendTo('body').submit();
+        }
+
+    </script>
+
+{% endblock %}
