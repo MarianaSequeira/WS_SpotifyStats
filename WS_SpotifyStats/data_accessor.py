@@ -522,3 +522,158 @@ def insert_comment(artist_uri):
     return None
 
 
+def get_artist_active_status(artist_uri):
+    query = f"""{PREFIXES}
+    ASK {{ 
+        {artist_uri} spotp:activeStatus ?o .
+    }}
+    """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    if not json.loads(res)['boolean']:
+        insert_active_status()
+    
+    return select_comment(artist_uri)[0]['o']['value']
+
+
+def insert_active_status():
+    insert = f"""{PREFIXES}
+    INSERT {{
+        ?s spotp:activeStatus "Active" .
+    }} WHERE {{
+        ?s spotp:count ?x .
+        FILTER(?x>50)
+    }}
+    """
+
+    payload_query = {"update": insert}
+
+    res = accessor.sparql_update(body=payload_query, repo_name=repo_name)
+
+    insert = f"""{PREFIXES}
+    INSERT {{
+        ?s spotp:activeStatus "Inactive" .
+    }} WHERE {{
+        ?s spotp:count ?x .
+        FILTER(?x<=50)
+    }}
+    """
+
+    payload_query = {"update": insert}
+
+    res = accessor.sparql_update(body=payload_query, repo_name=repo_name)
+
+
+def select_active_status(artist_uri):
+    query = f"""{PREFIXES}
+    SELECT * FROM {{
+        {artist_uri} spotp:activeStatus ?o .
+    }}
+    """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+def get_songs_by_decade(lower, higher, decade_name):
+    query = f"""{PREFIXES}
+    ASK {{ 
+        ?s a spotc:{decade_name} .
+    }}
+    """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    if not json.loads(res)['boolean']:
+        insert_decade(lower, higher, decade_name)
+    
+    return select_decade(decade_name)
+
+
+def insert_decade(lower, higher, decade_name):
+    insert = f"""{PREFIXES}
+    INSERT {{ 
+        ?s a spotc:{decade_name} .
+    }}
+    WHERE {{
+        ?s spotp:year ?y
+        FILTER(?y>={lower} && ?y<{higher})
+    }}
+    """
+
+    payload_query = {"update": insert}
+
+    res = accessor.sparql_update(body=payload_query, repo_name=repo_name)
+
+def select_decade(decade_name):
+    query = f"""{PREFIXES}
+    SELECT * FROM {{
+        ?s a spotc:{decade_name} .
+    }}
+    """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    res = json.loads(res)
+
+    return res['results']['bindings']
+
+
+def get_popular_genres():
+    query = f"""{PREFIXES}
+    ASK {{ 
+        ?s a spotc:PopularGenre .
+    }}
+    """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    if not json.loads(res)['boolean']:
+        insert_popular_genre()
+    
+    return select_popular_genre()
+
+def insert_popular_genre():
+    insert = f"""{PREFIXES}
+    INSERT {{
+        ?genre a spotc:PopularGenre .
+    }} 
+    WHERE {{
+        {{ 
+            SELECT  ?genre (COUNT(?art) AS ?n)
+            WHERE
+            {{ 
+                ?genre spotp:hasArtist ?art 
+            }} GROUP BY ?genre
+        }}
+        FILTER(?n>50)
+    }}
+    """
+
+    payload_query = {"update": insert}
+
+    res = accessor.sparql_update(body=payload_query, repo_name=repo_name)
+
+
+def select_popular_genre():
+    query = f"""{PREFIXES}
+    SELECT * FROM {{
+        ?s a spotc:PopularGenre .
+    }}
+    """
+    payload_query = {"query": query}
+
+    res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
+
+    res = json.loads(res)
+
+    return res['results']['bindings']
