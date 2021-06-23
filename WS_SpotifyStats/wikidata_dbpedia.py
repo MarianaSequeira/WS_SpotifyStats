@@ -5,12 +5,16 @@ import time
 
 
 def get_entity_id(searchTerm):
-    searchTerm = searchTerm.replace(" ", "_")
-    r = requests.get(
-        f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={searchTerm}&language=en&format=json")
-    data = json.loads(r.text)
-    entityid = data['search'][0]['id']
-    return entityid
+    try:
+        searchTerm = searchTerm.replace(" ", "_")
+        r = requests.get(
+            f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={searchTerm}&language=en&format=json")
+        data = json.loads(r.text)
+        entityid = data['search'][0]['id']
+        return entityid
+    except Exception as e:
+        return None
+
 
 
 def get_wikidata_image(entityid):

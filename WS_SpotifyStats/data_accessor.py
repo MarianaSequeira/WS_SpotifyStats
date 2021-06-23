@@ -323,7 +323,6 @@ def get_elem_count(elem):
         ?s rdf:type spotc:{elem} . 
     }} """
 
-
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
@@ -451,14 +450,15 @@ def select_face_photo(artist_uri):
 def insert_face_photo(artist_uri):
     artist_name = get_artist_name(artist_uri)[0]['o']['value']
     entity_id = wikidata_dbpedia.get_entity_id(artist_name)
-    image_url = wikidata_dbpedia.get_wikidata_image(entity_id)
-    if image_url:
-        insert = f"""{PREFIXES}
-        insert data {{ {artist_uri} spotp:face_photo "{image_url}" . }}
-        """
-        payload_query = {"update": insert}
-        res = accessor.sparql_update(body=payload_query, repo_name=repo_name)
-        return image_url
+    if entity_id:
+        image_url = wikidata_dbpedia.get_wikidata_image(entity_id)
+        if image_url:
+            insert = f"""{PREFIXES}
+            insert data {{ {artist_uri} spotp:face_photo "{image_url}" . }}
+            """
+            payload_query = {"update": insert}
+            res = accessor.sparql_update(body=payload_query, repo_name=repo_name)
+            return image_url
     return None
 
 
@@ -534,8 +534,8 @@ def get_artist_active_status(artist_uri):
 
     if not json.loads(res)['boolean']:
         insert_active_status()
-    
-    return select_comment(artist_uri)[0]['o']['value']
+
+    return select_active_status(artist_uri)[0]['o']['value']
 
 
 def insert_active_status():
@@ -568,10 +568,11 @@ def insert_active_status():
 
 def select_active_status(artist_uri):
     query = f"""{PREFIXES}
-    SELECT * FROM {{
+    SELECT ?o WHERE {{
         {artist_uri} spotp:activeStatus ?o .
     }}
     """
+
     payload_query = {"query": query}
 
     res = accessor.sparql_select(body=payload_query, repo_name=repo_name)
@@ -593,7 +594,7 @@ def get_songs_by_decade(lower, higher, decade_name):
 
     if not json.loads(res)['boolean']:
         insert_decade(lower, higher, decade_name)
-    
+
     return select_decade(decade_name)
 
 
@@ -612,9 +613,10 @@ def insert_decade(lower, higher, decade_name):
 
     res = accessor.sparql_update(body=payload_query, repo_name=repo_name)
 
+
 def select_decade(decade_name):
     query = f"""{PREFIXES}
-    SELECT * FROM {{
+    SELECT * WHERE {{
         ?s a spotc:{decade_name} .
     }}
     """
@@ -639,8 +641,9 @@ def get_popular_genres():
 
     if not json.loads(res)['boolean']:
         insert_popular_genre()
-    
+
     return select_popular_genre()
+
 
 def insert_popular_genre():
     insert = f"""{PREFIXES}
@@ -666,9 +669,11 @@ def insert_popular_genre():
 
 def select_popular_genre():
     query = f"""{PREFIXES}
-    SELECT * FROM {{
+    SELECT DISTINCT * WHERE {{
         ?s a spotc:PopularGenre .
-    }}
+        ?s spotp:popularity ?pop .
+        ?s dc:title ?name .
+    }} ORDER BY DESC(?pop) limit 102
     """
     payload_query = {"query": query}
 

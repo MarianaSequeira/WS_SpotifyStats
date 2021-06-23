@@ -182,6 +182,7 @@ def artist_page(request, id):
         'labels': labels,
         'summary': summary,
         'data': data,
+        'activityStatus': get_artist_active_status(f"spot:{id}"),
         'duration': str(min) + ' min and ' + str(seg) + ' sec'
     }
 
@@ -248,20 +249,23 @@ def genres_page(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
 
-
+    # count_genres
 
     if request.method == 'POST':
         search = request.POST['search']
         genres = get_genre_by_partial_name(search)
+        count_genres = genres
         title = "Genres with '" + search + "'"
     else:
         genres = get_all_genres()
+        count_genres = get_popular_genres()
         title = "Genres"
 
     tparams = {
         'ola': "ola",
         'title': title,
-        'genres': genres
+        'genres': genres,
+        'count_genres': count_genres
     }
     return render(request, 'genresPage.html', tparams)
 
