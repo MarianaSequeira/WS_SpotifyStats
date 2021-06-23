@@ -5,21 +5,6 @@ import json
 
 general_prefix = "http://SpotifyStats.com"
 
-# # prefix for song
-# song_prefix = f"{general_prefix}/song"
-
-# # prefix for artist
-# artist_prefix = f"{general_prefix}/artist"
-
-# # prefix for predicates
-# predicate_prefix = f"{general_prefix}/pred"
-
-# # prefix for genre
-# genre_prefix = f"{general_prefix}/genre"
-
-# # prefix for type
-# type_prefix = f"{general_prefix}/type"
-
 schema_prefix = "http://www.w3.org/2001/XMLSchema#"
 
 data_file = open('data.csv', 'r')
@@ -42,8 +27,6 @@ prefix_string = f"""@prefix rdf: <{general_prefix}/rdf/> .
 
 
 n3_file.write(prefix_string)
-
-# year_ids = set()
 
 for count, row in enumerate(csv.reader(data_file, delimiter=',')):
     if count == 0:
@@ -86,7 +69,6 @@ for count, row in enumerate(csv.reader(data_file, delimiter=',')):
     song_data += f'spotp:energy "{row[4]}"^^w3:double ; '
     song_data += f'spotp:explicit "{row[5]}"^^w3:boolean ; '
     song_data += f'spotp:instrumentalness "{row[7]}"^^w3:double ; '
-    # song_data += f'spotp:key "{row[8]}"^^w3:integer ; '
     song_data += f'spotp:liveness "{row[9]}"^^w3:double ; '
     song_data += f'spotp:loudness "{row[10]}"^^w3:double ; '
     song_data += f'spotp:mode "{row[11]}"^^w3:boolean ; '
@@ -99,14 +81,6 @@ for count, row in enumerate(csv.reader(data_file, delimiter=',')):
 
     n3_file.write(song_data)
 
-    # if row[18] not in year_ids:
-    #     year_ids.add(row[18])
-    #     string = f'\nspot:y{row[18]} spotp:year_song "{row[18]}"^^w3:integer . '
-    #     n3_file.write(string)
-
-
-    
-
 
 genre_dict = dict()
 data_by_genres_file = open('data_by_genres.csv', 'r')
@@ -118,7 +92,6 @@ for count, row in enumerate(csv.reader(data_by_genres_file, delimiter=',')):
     name = re.sub(r'\\', '', name)
 
     genre_data = f'\nspot:g{count - 1} dc:title "{name}"^^w3:string ; '
-    # genre_data += f'spotp:type type:genre ; '
     genre_data += f'spotp:acousticness "{row[1]}"^^w3:double ; '
     genre_data += f'spotp:danceability "{row[2]}"^^w3:double ; '
     genre_data += f'spotp:duration_ms "{row[3]}"^^w3:double ; '
@@ -150,13 +123,11 @@ for count, row in enumerate(csv.reader(data_by_artist_file, delimiter=',')):
     name = re.sub(r"”", '', name)
 
     artist_data = f'\nspot:a{artists[row[0]]} dc:title "{name}"^^w3:string ; '
-    # artist_data += f'spotp:type type:artist ; '
     artist_data += f'spotp:acousticness "{row[1]}"^^w3:double ; '
     artist_data += f'spotp:danceability "{row[2]}"^^w3:double ; '
     artist_data += f'spotp:duration_ms "{row[3]}"^^w3:double ; '
     artist_data += f'spotp:energy "{row[4]}"^^w3:double ; '
     artist_data += f'spotp:instrumentalness "{row[5]}"^^w3:double ; '
-    # artist_data += f'spotp:key "{row[12]}"^^w3:integer ; '
     artist_data += f'spotp:liveness "{row[6]}"^^w3:double ; '
     artist_data += f'spotp:loudness "{row[7]}"^^w3:double ; '
     artist_data += f'spotp:mode "{row[13]}"^^w3:boolean ; '

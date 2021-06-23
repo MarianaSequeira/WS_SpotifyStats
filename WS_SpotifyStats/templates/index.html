@@ -61,12 +61,12 @@
 			</div>
             <div class="row" style="padding-top: 80px">
                 <div class="section-title" style="width:100%;text-align:center;">
-                    <h4>Try our search now!</h4>
+                    <h4 id="trySearch">Try our search now!</h4>
                 </div>
 
             </div>
 
-            <form id="searchFormSong" action="." method="POST" class="search-form" >
+            <form id="searchFormSong" action=".#trySearch" method="POST" class="search-form" >
                 {% csrf_token %}
                  <div class="row">
                     <div class="col"><input type="text" name="song" placeholder="Song"></div>
