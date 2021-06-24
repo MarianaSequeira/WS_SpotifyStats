@@ -263,52 +263,285 @@ dc:title rdf:type owl:DatatypeProperty ;
 #################################################################
 #    Classes
 #################################################################
+                    
+###  http://SpotifyStats.com/spotc/Genre
+spotc:Genre rdf:type owl:Class ;
+            rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/PopularGenres
+spotc:PopularGenres rdf:type owl:Class ;
+                    owl:equivalentClass [ rdf:type owl:Restriction ;
+                                          owl:onProperty spotp:hasArtist ;
+                                          owl:minCardinality "50"^^xsd:nonNegativeInteger
+                                        ] ;
+                    rdfs:subClassOf spotc:Genre .
+
 
 ###  http://SpotifyStats.com/spotc/Artist
 spotc:Artist rdf:type owl:Class ;
-             rdfs:subClassOf foaf:Object ;
-             rdf:type rdfs:Class ,
-                      owl:Class .
-
-
-###  http://SpotifyStats.com/spotc/Genre
-spotc:Genre rdf:type owl:Class ;
-            rdfs:subClassOf foaf:Object ;
-            rdf:type rdfs:Class ,
-                     owl:Class .
+             rdfs:subClassOf foaf:Object .
 
 
 ###  http://SpotifyStats.com/spotc/Song
 spotc:Song rdf:type owl:Class ;
-           rdfs:subClassOf foaf:Object ;
-           rdf:type rdfs:Class ,
-                    owl:Class .
+           rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/Eighties
+spotc:Eighties rdf:type owl:Class ;
+               owl:equivalentClass [ rdf:type owl:Restriction ;
+                                     owl:onProperty spotp:year ;
+                                     owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                          owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:minInclusive 1980
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                               [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:maxExclusive 1990
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                             )
+                                                        ]
+                                   ] ;
+               rdfs:subClassOf spotc:Song .
+
+
+###  http://SpotifyStats.com/spotc/Fifties
+spotc:Fifties rdf:type owl:Class ;
+              owl:equivalentClass [ rdf:type owl:Restriction ;
+                                    owl:onProperty spotp:year ;
+                                    owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                         owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                owl:onDatatype xsd:integer ;
+                                                                                owl:withRestrictions ( [ xsd:minInclusive 1950
+                                                                                                       ]
+                                                                                                     )
+                                                                              ]
+                                                                              [ rdf:type rdfs:Datatype ;
+                                                                                owl:onDatatype xsd:integer ;
+                                                                                owl:withRestrictions ( [ xsd:maxExclusive 1960
+                                                                                                       ]
+                                                                                                     )
+                                                                              ]
+                                                                            )
+                                                       ]
+                                  ] ;
+              rdfs:subClassOf spotc:Song .
+
+
+###  http://SpotifyStats.com/spotc/Forties
+spotc:Forties rdf:type owl:Class ;
+              owl:equivalentClass [ rdf:type owl:Restriction ;
+                                    owl:onProperty spotp:year ;
+                                    owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                         owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                owl:onDatatype xsd:integer ;
+                                                                                owl:withRestrictions ( [ xsd:minInclusive 1940
+                                                                                                       ]
+                                                                                                     )
+                                                                              ]
+                                                                              [ rdf:type rdfs:Datatype ;
+                                                                                owl:onDatatype xsd:integer ;
+                                                                                owl:withRestrictions ( [ xsd:maxExclusive 1950
+                                                                                                       ]
+                                                                                                     )
+                                                                              ]
+                                                                            )
+                                                       ]
+                                  ] ;
+              rdfs:subClassOf spotc:Song .
+
+
+
+
+###  http://SpotifyStats.com/spotc/Nineties
+spotc:Nineties rdf:type owl:Class ;
+               owl:equivalentClass [ rdf:type owl:Restriction ;
+                                     owl:onProperty spotp:year ;
+                                     owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                          owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:minInclusive 1990
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                               [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:maxExclusive 2000
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                             )
+                                                        ]
+                                   ] ;
+               rdfs:subClassOf spotc:Song .
+
+
+###  http://SpotifyStats.com/spotc/Seventies
+spotc:Seventies rdf:type owl:Class ;
+                owl:equivalentClass [ rdf:type owl:Restriction ;
+                                      owl:onProperty spotp:year ;
+                                      owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                           owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                  owl:onDatatype xsd:integer ;
+                                                                                  owl:withRestrictions ( [ xsd:minInclusive 1970
+                                                                                                         ]
+                                                                                                       )
+                                                                                ]
+                                                                                [ rdf:type rdfs:Datatype ;
+                                                                                  owl:onDatatype xsd:integer ;
+                                                                                  owl:withRestrictions ( [ xsd:maxExclusive 1980
+                                                                                                         ]
+                                                                                                       )
+                                                                                ]
+                                                                              )
+                                                         ]
+                                    ] ;
+                rdfs:subClassOf spotc:Song .
+
+
+###  http://SpotifyStats.com/spotc/Sixties
+spotc:Sixties rdf:type owl:Class ;
+              owl:equivalentClass [ rdf:type owl:Restriction ;
+                                    owl:onProperty spotp:year ;
+                                    owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                         owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                owl:onDatatype xsd:integer ;
+                                                                                owl:withRestrictions ( [ xsd:minInclusive 1960
+                                                                                                       ]
+                                                                                                     )
+                                                                              ]
+                                                                              [ rdf:type rdfs:Datatype ;
+                                                                                owl:onDatatype xsd:integer ;
+                                                                                owl:withRestrictions ( [ xsd:maxExclusive 1970
+                                                                                                       ]
+                                                                                                     )
+                                                                              ]
+                                                                            )
+                                                       ]
+                                  ] ;
+              rdfs:subClassOf spotc:Song .
+
+
+###  http://SpotifyStats.com/spotc/Thirties
+spotc:Thirties rdf:type owl:Class ;
+               owl:equivalentClass [ rdf:type owl:Restriction ;
+                                     owl:onProperty spotp:year ;
+                                     owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                          owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:minInclusive 1930
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                               [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:maxExclusive 1940
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                             )
+                                                        ]
+                                   ] ;
+               rdfs:subClassOf spotc:Song .
+
+
+###  http://SpotifyStats.com/spotc/Twenties
+spotc:Twenties rdf:type owl:Class ;
+               owl:equivalentClass [ rdf:type owl:Restriction ;
+                                     owl:onProperty spotp:year ;
+                                     owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                          owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:minInclusive 1920
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                               [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:maxExclusive 1930
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                             )
+                                                        ]
+                                   ] ;
+               rdfs:subClassOf spotc:Song .
+
+
+###  http://SpotifyStats.com/spotc/TwentyTens
+spotc:TwentyTens rdf:type owl:Class ;
+                 owl:equivalentClass [ rdf:type owl:Restriction ;
+                                       owl:onProperty spotp:year ;
+                                       owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                            owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                   owl:onDatatype xsd:integer ;
+                                                                                   owl:withRestrictions ( [ xsd:minInclusive 2010
+                                                                                                          ]
+                                                                                                        )
+                                                                                 ]
+                                                                                 [ rdf:type rdfs:Datatype ;
+                                                                                   owl:onDatatype xsd:integer ;
+                                                                                   owl:withRestrictions ( [ xsd:maxExclusive 2020
+                                                                                                          ]
+                                                                                                        )
+                                                                                 ]
+                                                                               )
+                                                          ]
+                                     ] ;
+                 rdfs:subClassOf spotc:Song .
+
+
+###  http://SpotifyStats.com/spotc/TwentyTwenties
+spotc:TwentyTwenties rdf:type owl:Class ;
+                     owl:equivalentClass [ rdf:type owl:Restriction ;
+                                           owl:onProperty spotp:year ;
+                                           owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                                owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                       owl:onDatatype xsd:integer ;
+                                                                                       owl:withRestrictions ( [ xsd:minInclusive 2020
+                                                                                                              ]
+                                                                                                            )
+                                                                                     ]
+                                                                                     [ rdf:type rdfs:Datatype ;
+                                                                                       owl:onDatatype xsd:integer ;
+                                                                                       owl:withRestrictions ( [ xsd:maxExclusive 2030
+                                                                                                              ]
+                                                                                                            )
+                                                                                     ]
+                                                                                   )
+                                                              ]
+                                         ] ;
+                     rdfs:subClassOf spotc:Song .
+
+
+###  http://SpotifyStats.com/spotc/TwoThousands
+spotc:TwoThousands rdf:type owl:Class ;
+                   owl:equivalentClass [ rdf:type owl:Restriction ;
+                                         owl:onProperty spotp:year ;
+                                         owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                              owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                     owl:onDatatype xsd:integer ;
+                                                                                     owl:withRestrictions ( [ xsd:minInclusive 2000
+                                                                                                            ]
+                                                                                                          )
+                                                                                   ]
+                                                                                   [ rdf:type rdfs:Datatype ;
+                                                                                     owl:onDatatype xsd:integer ;
+                                                                                     owl:withRestrictions ( [ xsd:maxExclusive 2010
+                                                                                                            ]
+                                                                                                          )
+                                                                                   ]
+                                                                                 )
+                                                            ]
+                                       ] ;
+                   rdfs:subClassOf spotc:Song .
 
 
 ###  http://xmlns.com/foaf/0.1/Object
-foaf:Object rdf:type owl:Class ;
-            rdf:type owl:Class .
-
-spotc:PopularGenre rdf:type owl:Class ;
-                   rdfs:subClassOf spotc:Genre .
-
-spotc:Twenties rdf:type owl:Class .
-
-spotc:Thirties rdf:type owl:Class .
-
-spotc:Forties rdf:type owl:Class .
-
-spotc:Fifties rdf:type owl:Class .
-
-spotc:Sixties rdf:type owl:Class .
-
-spotc:Seventies rdf:type owl:Class .
-
-spotc:Eighties rdf:type owl:Class .
-
-spotc:Nineties rdf:type owl:Class .
-
-spotc:TwoThousands rdf:type owl:Class .   
- 
-spotc:TwentyTens rdf:type owl:Class .
-
+foaf:Object rdf:type owl:Class .

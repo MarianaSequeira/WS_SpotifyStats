@@ -107,7 +107,7 @@
                                         {% with song.artist_names.value|split:"," as artist_names %}
                                             <p><b><i class="fas fa-microphone-alt"></i>Artist: </b>
                                                 {% for artist_uri, artist_name in artist_uris|zip:artist_names %}
-                                                    <span rel="spopt:artists">
+                                                    <span rel="spotp:artists">
                                                         <span about="{{ artist_uri }}"
                                                               typeof="spotc:Artist"
                                                               property="dc:title">

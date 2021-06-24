@@ -36,10 +36,10 @@
                             <div class="col-md-3" rel="spotp:top_artists">
                                 <div class="category-item" about="{{ artist.s.value }}"
                                                            typeof="spotc:Artist">
-                                   {% if not artist.face_photo.value %}
+                                   {% if not artist.face_photo %}
                                         <img src="{% static  'img/playlist/9.jpg' %}" alt="">
                                    {% else %}
-                                        <img property="spotp:face_photo" src="{{ artist.face_photo.value }}" alt="">
+                                        <img property="spotp:face_photo" src="{{ artist.face_photo }}" alt="">
                                    {% endif %}
                                     <div class="ci-text">
                                         <h4 property="dc:title">

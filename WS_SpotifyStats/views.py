@@ -234,6 +234,7 @@ def genre_page(request, id):
         if face_photo:
             artist['face_photo'] = face_photo
     
+
     tparams = {
         'uri': uri,
         'id': id,
