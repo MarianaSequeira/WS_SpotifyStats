@@ -1,7 +1,7 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix w3: <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdf: <http://SpotifyStats.com/rdf/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -18,28 +18,82 @@
 #    Annotation properties
 #################################################################
 
-###  http://SpotifyStats.com/rdf/type
-rdf:type rdf:type owl:AnnotationProperty ;
-         rdf:type owl:AnnotationProperty .
+###  http://SpotifyStats.com/spotp/acousticness
+spotp:acousticness rdf:type owl:AnnotationProperty ;
+                   rdfs:range rdfs:Literal ;
+                   rdfs:domain foaf:Object .
 
 
-###  http://purl.org/dc/elements/1.1/title
-dc:title rdf:type owl:AnnotationProperty ;
-         rdfs:subPropertyOf foaf:name .
+###  http://SpotifyStats.com/spotp/danceability
+spotp:danceability rdf:type owl:AnnotationProperty ;
+                   rdfs:range rdfs:Literal ;
+                   rdfs:domain foaf:Object .
 
 
-###  http://xmlns.com/foaf/0.1/name
-foaf:name rdf:type owl:AnnotationProperty ;
-          rdf:type owl:AnnotationProperty .
+###  http://SpotifyStats.com/spotp/duration_ms
+spotp:duration_ms rdf:type owl:AnnotationProperty ;
+                  rdfs:range rdfs:Literal ;
+                  rdfs:domain foaf:Object .
 
 
-#################################################################
-#    Datatypes
-#################################################################
+###  http://SpotifyStats.com/spotp/energy
+spotp:energy rdf:type owl:AnnotationProperty ;
+             rdfs:range rdfs:Literal ;
+             rdfs:domain foaf:Object .
 
-###  http://www.w3.org/2001/XMLSchema#date
-xsd:date rdf:type rdfs:Datatype ;
-         rdf:type rdfs:Datatype .
+
+###  http://SpotifyStats.com/spotp/explicit
+spotp:explicit rdf:type owl:AnnotationProperty ;
+               rdfs:range rdfs:Literal ;
+               rdfs:domain foaf:Object .
+
+
+###  http://SpotifyStats.com/spotp/instrumentalness
+spotp:instrumentalness rdf:type owl:AnnotationProperty ;
+                       rdfs:range rdfs:Literal ;
+                       rdfs:domain foaf:Object .
+
+
+###  http://SpotifyStats.com/spotp/liveness
+spotp:liveness rdf:type owl:AnnotationProperty ;
+               rdfs:range rdfs:Literal ;
+               rdfs:domain foaf:Object .
+
+
+###  http://SpotifyStats.com/spotp/loudness
+spotp:loudness rdf:type owl:AnnotationProperty ;
+               rdfs:range rdfs:Literal ;
+               rdfs:domain foaf:Object .
+
+
+###  http://SpotifyStats.com/spotp/mode
+spotp:mode rdf:type owl:AnnotationProperty ;
+           rdfs:range rdfs:Literal ;
+           rdfs:domain foaf:Object .
+
+
+###  http://SpotifyStats.com/spotp/popularity
+spotp:popularity rdf:type owl:AnnotationProperty ;
+                 rdfs:range rdfs:Literal ;
+                 rdfs:domain foaf:Object .
+
+
+###  http://SpotifyStats.com/spotp/speechiness
+spotp:speechiness rdf:type owl:AnnotationProperty ;
+                  rdfs:range rdfs:Literal ;
+                  rdfs:domain foaf:Object .
+
+
+###  http://SpotifyStats.com/spotp/tempo
+spotp:tempo rdf:type owl:AnnotationProperty ;
+            rdfs:range rdfs:Literal ;
+            rdfs:domain foaf:Object .
+
+
+###  http://SpotifyStats.com/spotp/valence
+spotp:valence rdf:type owl:AnnotationProperty ;
+              rdfs:range rdfs:Literal ;
+              rdfs:domain foaf:Object .
 
 
 #################################################################
@@ -50,40 +104,30 @@ xsd:date rdf:type rdfs:Datatype ;
 spotp:artists rdf:type owl:ObjectProperty ;
               owl:inverseOf spotp:hasSong ;
               rdfs:domain spotc:Song ;
-              rdfs:range spotc:Artist ;
-              rdf:type rdf:Property ,
-                       owl:ObjectProperty .
+              rdfs:range spotc:Artist .
 
 
 ###  http://SpotifyStats.com/spotp/genre
 spotp:genre rdf:type owl:ObjectProperty ;
             owl:inverseOf spotp:hasArtist ;
             rdfs:domain spotc:Artist ;
-            rdfs:range spotc:Genre ;
-            rdf:type rdf:Property ,
-                     owl:ObjectProperty .
+            rdfs:range spotc:Genre .
 
 
 ###  http://SpotifyStats.com/spotp/hasArtist
 spotp:hasArtist rdf:type owl:ObjectProperty ;
                 rdfs:domain spotc:Genre ;
-                rdfs:range spotc:Artist ;
-                rdf:type owl:ObjectProperty .
+                rdfs:range spotc:Artist .
 
 
 ###  http://SpotifyStats.com/spotp/hasSong
 spotp:hasSong rdf:type owl:ObjectProperty ;
               rdfs:domain spotc:Artist ;
-              rdfs:range spotc:Song ;
-              rdf:type owl:ObjectProperty .
+              rdfs:range spotc:Song .
 
 
 ###  http://SpotifyStats.com/spotp/similar
-spotp:similar rdf:type owl:ObjectProperty ;
-              rdfs:domain spotc:Song ;
-              rdfs:range spotc:Song ;
-              rdf:type rdf:Property ,
-                       owl:ObjectProperty .
+spotp:similar rdf:type owl:ObjectProperty .
 
 
 #################################################################
@@ -91,167 +135,91 @@ spotp:similar rdf:type owl:ObjectProperty ;
 #################################################################
 
 ###  http://SpotifyStats.com/spotp/acousticness
-spotp:acousticness rdf:type owl:DatatypeProperty ;
-                   rdfs:domain foaf:Object ;
-                   rdfs:range rdfs:Literal ;
-                   rdf:type rdf:Property ,
-                            owl:AnnotationProperty ,
-                            owl:DatatypeProperty .
+spotp:acousticness rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/count
 spotp:count rdf:type owl:DatatypeProperty ;
             rdfs:domain spotc:Artist ;
-            rdfs:range rdfs:Literal ;
-            rdf:type rdf:Property ,
-                     owl:DatatypeProperty .
+            rdfs:range rdfs:Literal .
 
 
 ###  http://SpotifyStats.com/spotp/cover_art
 spotp:cover_art rdf:type owl:DatatypeProperty ;
                 rdfs:domain spotc:Song ;
-                rdfs:range rdfs:Literal ;
-                rdf:type rdf:Property ,
-                         owl:DatatypeProperty .
+                rdfs:range rdfs:Literal .
 
 
 ###  http://SpotifyStats.com/spotp/danceability
-spotp:danceability rdf:type owl:DatatypeProperty ;
-                   rdfs:domain foaf:Object ;
-                   rdfs:range rdfs:Literal ;
-                   rdf:type rdf:Property ,
-                            owl:AnnotationProperty ,
-                            owl:DatatypeProperty .
+spotp:danceability rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/duration_ms
-spotp:duration_ms rdf:type owl:DatatypeProperty ;
-                  rdfs:domain foaf:Object ;
-                  rdfs:range rdfs:Literal ;
-                  rdf:type rdf:Property ,
-                           owl:AnnotationProperty ,
-                           owl:DatatypeProperty .
+spotp:duration_ms rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/energy
-spotp:energy rdf:type owl:DatatypeProperty ;
-             rdfs:domain foaf:Object ;
-             rdfs:range rdfs:Literal ;
-             rdf:type rdf:Property ,
-                      owl:AnnotationProperty ,
-                      owl:DatatypeProperty .
+spotp:energy rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/explicit
-spotp:explicit rdf:type owl:DatatypeProperty ;
-               rdfs:domain foaf:Object ;
-               rdfs:range rdfs:Literal ;
-               rdf:type rdf:Property ,
-                        owl:AnnotationProperty ,
-                        owl:DatatypeProperty .
+spotp:explicit rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/instrumentalness
-spotp:instrumentalness rdf:type owl:DatatypeProperty ;
-                       rdfs:domain foaf:Object ;
-                       rdfs:range rdfs:Literal ;
-                       rdf:type rdf:Property ,
-                                owl:AnnotationProperty ,
-                                owl:DatatypeProperty .
+spotp:instrumentalness rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/key
 spotp:key rdf:type owl:DatatypeProperty ;
           rdfs:domain spotc:Genre ;
-          rdfs:range rdfs:Literal ;
-          rdf:type rdf:Property ,
-                   owl:DatatypeProperty .
+          rdfs:range rdfs:Literal .
 
 
 ###  http://SpotifyStats.com/spotp/liveness
-spotp:liveness rdf:type owl:DatatypeProperty ;
-               rdfs:domain foaf:Object ;
-               rdfs:range rdfs:Literal ;
-               rdf:type rdf:Property ,
-                        owl:AnnotationProperty ,
-                        owl:DatatypeProperty .
+spotp:liveness rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/loudness
-spotp:loudness rdf:type owl:DatatypeProperty ;
-               rdfs:domain foaf:Object ;
-               rdfs:range rdfs:Literal ;
-               rdf:type rdf:Property ,
-                        owl:AnnotationProperty ,
-                        owl:DatatypeProperty .
+spotp:loudness rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/mode
-spotp:mode rdf:type owl:DatatypeProperty ;
-           rdfs:domain foaf:Object ;
-           rdfs:range rdfs:Literal ;
-           rdf:type rdf:Property ,
-                    owl:AnnotationProperty ,
-                    owl:DatatypeProperty .
+spotp:mode rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/popularity
-spotp:popularity rdf:type owl:DatatypeProperty ;
-                 rdfs:domain foaf:Object ;
-                 rdfs:range rdfs:Literal ;
-                 rdf:type rdf:Property ,
-                          owl:AnnotationProperty ,
-                          owl:DatatypeProperty .
+spotp:popularity rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/release_date
 spotp:release_date rdf:type owl:DatatypeProperty ;
                    rdfs:domain spotc:Song ;
-                   rdfs:range rdfs:Literal ;
-                   rdf:type rdf:Property ,
-                            owl:DatatypeProperty .
+                   rdfs:range rdfs:Literal .
 
 
 ###  http://SpotifyStats.com/spotp/speechiness
-spotp:speechiness rdf:type owl:DatatypeProperty ;
-                  rdfs:domain foaf:Object ;
-                  rdfs:range rdfs:Literal ;
-                  rdf:type rdf:Property ,
-                           owl:AnnotationProperty ,
-                           owl:DatatypeProperty .
+spotp:speechiness rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/tempo
-spotp:tempo rdf:type owl:DatatypeProperty ;
-            rdfs:domain foaf:Object ;
-            rdfs:range rdfs:Literal ;
-            rdf:type rdf:Property ,
-                     owl:AnnotationProperty ,
-                     owl:DatatypeProperty .
+spotp:tempo rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/valence
-spotp:valence rdf:type owl:DatatypeProperty ;
-              rdfs:domain foaf:Object ;
-              rdfs:range rdfs:Literal ;
-              rdf:type rdf:Property ,
-                       owl:AnnotationProperty ,
-                       owl:DatatypeProperty .
+spotp:valence rdf:type owl:DatatypeProperty .
 
 
 ###  http://SpotifyStats.com/spotp/year
 spotp:year rdf:type owl:DatatypeProperty ;
            rdfs:domain spotc:Song ;
-           rdfs:range rdfs:Literal ;
-           rdf:type owl:DatatypeProperty .
+           rdfs:range rdfs:Literal .
 
 
 ###  http://SpotifyStats.com/spotp/yt_id
 spotp:yt_id rdf:type owl:DatatypeProperty ;
             rdfs:domain spotc:Song ;
-            rdfs:range rdfs:Literal ;
-            rdf:type rdf:Property ,
-                     owl:DatatypeProperty .
+            rdfs:range rdfs:Literal .
 
 
 ###  http://purl.org/dc/elements/1.1/title
@@ -266,46 +234,290 @@ dc:title rdf:type owl:DatatypeProperty ;
 
 ###  http://SpotifyStats.com/spotc/Artist
 spotc:Artist rdf:type owl:Class ;
-             rdfs:subClassOf foaf:Object ;
-             rdf:type rdfs:Class ,
-                      owl:Class .
+             rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/Eighties
+spotc:Eighties rdf:type owl:Class ;
+               owl:equivalentClass [ rdf:type owl:Restriction ;
+                                     owl:onProperty spotp:year ;
+                                     owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                          owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:minInclusive 1980
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                               [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:maxExclusive 1990
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                             )
+                                                        ]
+                                   ] ;
+               rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/Fifties
+spotc:Fifties rdf:type owl:Class ;
+              owl:equivalentClass [ rdf:type owl:Restriction ;
+                                    owl:onProperty spotp:year ;
+                                    owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                         owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                owl:onDatatype xsd:integer ;
+                                                                                owl:withRestrictions ( [ xsd:minInclusive 1950
+                                                                                                       ]
+                                                                                                     )
+                                                                              ]
+                                                                              [ rdf:type rdfs:Datatype ;
+                                                                                owl:onDatatype xsd:integer ;
+                                                                                owl:withRestrictions ( [ xsd:maxExclusive 1960
+                                                                                                       ]
+                                                                                                     )
+                                                                              ]
+                                                                            )
+                                                       ]
+                                  ] ;
+              rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/Forties
+spotc:Forties rdf:type owl:Class ;
+              owl:equivalentClass [ rdf:type owl:Restriction ;
+                                    owl:onProperty spotp:year ;
+                                    owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                         owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                owl:onDatatype xsd:integer ;
+                                                                                owl:withRestrictions ( [ xsd:minInclusive 1940
+                                                                                                       ]
+                                                                                                     )
+                                                                              ]
+                                                                              [ rdf:type rdfs:Datatype ;
+                                                                                owl:onDatatype xsd:integer ;
+                                                                                owl:withRestrictions ( [ xsd:maxExclusive 1950
+                                                                                                       ]
+                                                                                                     )
+                                                                              ]
+                                                                            )
+                                                       ]
+                                  ] ;
+              rdfs:subClassOf foaf:Object .
 
 
 ###  http://SpotifyStats.com/spotc/Genre
 spotc:Genre rdf:type owl:Class ;
-            rdfs:subClassOf foaf:Object ;
-            rdf:type rdfs:Class ,
-                     owl:Class .
+            rdfs:subClassOf foaf:Object .
 
 
 ###  http://SpotifyStats.com/spotc/MostActiveArtists
 spotc:MostActiveArtists rdf:type owl:Class ;
                         owl:equivalentClass [ rdf:type owl:Restriction ;
                                               owl:onProperty spotp:hasSong ;
-                                              owl:minCardinality "2"^^xsd:nonNegativeInteger
+                                              owl:minCardinality "1"^^xsd:nonNegativeInteger
                                             ] ;
-                        rdfs:subClassOf spotc:Artist ;
-                        rdf:type owl:Class .
+                        rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/Nineties
+spotc:Nineties rdf:type owl:Class ;
+               owl:equivalentClass [ rdf:type owl:Restriction ;
+                                     owl:onProperty spotp:year ;
+                                     owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                          owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:minInclusive 1990
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                               [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:maxExclusive 2000
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                             )
+                                                        ]
+                                   ] ;
+               rdfs:subClassOf foaf:Object .
 
 
 ###  http://SpotifyStats.com/spotc/PopularGenres
 spotc:PopularGenres rdf:type owl:Class ;
                     owl:equivalentClass [ rdf:type owl:Restriction ;
                                           owl:onProperty spotp:hasArtist ;
-                                          owl:minCardinality "10"^^xsd:nonNegativeInteger
+                                          owl:minCardinality "1"^^xsd:nonNegativeInteger
                                         ] ;
-                    rdfs:subClassOf spotc:Genre ;
-                    rdf:type owl:Class .
+                    rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/Seventies
+spotc:Seventies rdf:type owl:Class ;
+                owl:equivalentClass [ rdf:type owl:Restriction ;
+                                      owl:onProperty spotp:year ;
+                                      owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                           owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                  owl:onDatatype xsd:integer ;
+                                                                                  owl:withRestrictions ( [ xsd:minInclusive 1970
+                                                                                                         ]
+                                                                                                       )
+                                                                                ]
+                                                                                [ rdf:type rdfs:Datatype ;
+                                                                                  owl:onDatatype xsd:integer ;
+                                                                                  owl:withRestrictions ( [ xsd:maxExclusive 1980
+                                                                                                         ]
+                                                                                                       )
+                                                                                ]
+                                                                              )
+                                                         ]
+                                    ] ;
+                rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/Sixties
+spotc:Sixties rdf:type owl:Class ;
+              owl:equivalentClass [ rdf:type owl:Restriction ;
+                                    owl:onProperty spotp:year ;
+                                    owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                         owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                owl:onDatatype xsd:integer ;
+                                                                                owl:withRestrictions ( [ xsd:minInclusive 1960
+                                                                                                       ]
+                                                                                                     )
+                                                                              ]
+                                                                              [ rdf:type rdfs:Datatype ;
+                                                                                owl:onDatatype xsd:integer ;
+                                                                                owl:withRestrictions ( [ xsd:maxExclusive 1970
+                                                                                                       ]
+                                                                                                     )
+                                                                              ]
+                                                                            )
+                                                       ]
+                                  ] ;
+              rdfs:subClassOf foaf:Object .
 
 
 ###  http://SpotifyStats.com/spotc/Song
 spotc:Song rdf:type owl:Class ;
-           rdfs:subClassOf foaf:Object ;
-           rdf:type rdfs:Class ,
-                    owl:Class .
+           rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/Thirties
+spotc:Thirties rdf:type owl:Class ;
+               owl:equivalentClass [ rdf:type owl:Restriction ;
+                                     owl:onProperty spotp:year ;
+                                     owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                          owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:minInclusive 1930
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                               [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:maxExclusive 1940
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                             )
+                                                        ]
+                                   ] ;
+               rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/Twenties
+spotc:Twenties rdf:type owl:Class ;
+               owl:equivalentClass [ rdf:type owl:Restriction ;
+                                     owl:onProperty spotp:year ;
+                                     owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                          owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:minInclusive 1920
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                               [ rdf:type rdfs:Datatype ;
+                                                                                 owl:onDatatype xsd:integer ;
+                                                                                 owl:withRestrictions ( [ xsd:maxExclusive 1930
+                                                                                                        ]
+                                                                                                      )
+                                                                               ]
+                                                                             )
+                                                        ]
+                                   ] ;
+               rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/TwentyTens
+spotc:TwentyTens rdf:type owl:Class ;
+                 owl:equivalentClass [ rdf:type owl:Restriction ;
+                                       owl:onProperty spotp:year ;
+                                       owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                            owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                   owl:onDatatype xsd:integer ;
+                                                                                   owl:withRestrictions ( [ xsd:minInclusive 2010
+                                                                                                          ]
+                                                                                                        )
+                                                                                 ]
+                                                                                 [ rdf:type rdfs:Datatype ;
+                                                                                   owl:onDatatype xsd:integer ;
+                                                                                   owl:withRestrictions ( [ xsd:maxExclusive 2020
+                                                                                                          ]
+                                                                                                        )
+                                                                                 ]
+                                                                               )
+                                                          ]
+                                     ] ;
+                 rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/TwentyTwenties
+spotc:TwentyTwenties rdf:type owl:Class ;
+                     owl:equivalentClass [ rdf:type owl:Restriction ;
+                                           owl:onProperty spotp:year ;
+                                           owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                                owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                       owl:onDatatype xsd:integer ;
+                                                                                       owl:withRestrictions ( [ xsd:minInclusive 2020
+                                                                                                              ]
+                                                                                                            )
+                                                                                     ]
+                                                                                     [ rdf:type rdfs:Datatype ;
+                                                                                       owl:onDatatype xsd:integer ;
+                                                                                       owl:withRestrictions ( [ xsd:maxExclusive 2030
+                                                                                                              ]
+                                                                                                            )
+                                                                                     ]
+                                                                                   )
+                                                              ]
+                                         ] ;
+                     rdfs:subClassOf foaf:Object .
+
+
+###  http://SpotifyStats.com/spotc/TwoThousands
+spotc:TwoThousands rdf:type owl:Class ;
+                   owl:equivalentClass [ rdf:type owl:Restriction ;
+                                         owl:onProperty spotp:year ;
+                                         owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                              owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                                     owl:onDatatype xsd:integer ;
+                                                                                     owl:withRestrictions ( [ xsd:minInclusive 2000
+                                                                                                            ]
+                                                                                                          )
+                                                                                   ]
+                                                                                   [ rdf:type rdfs:Datatype ;
+                                                                                     owl:onDatatype xsd:integer ;
+                                                                                     owl:withRestrictions ( [ xsd:maxExclusive 2010
+                                                                                                            ]
+                                                                                                          )
+                                                                                   ]
+                                                                                 )
+                                                            ]
+                                       ] ;
+                   rdfs:subClassOf foaf:Object .
 
 
 ###  http://xmlns.com/foaf/0.1/Object
-foaf:Object rdf:type owl:Class ;
-            rdf:type owl:Class .
+foaf:Object rdf:type owl:Class .
 
