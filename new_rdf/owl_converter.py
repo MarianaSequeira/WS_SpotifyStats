@@ -11,22 +11,17 @@ data_file = open('data.csv', 'r')
 
 n3_file = open('data_test5.n3', 'w')
 
-# chave - songID
-# value - [artistIDs]
 music_artists = dict()
 
-# artistName, artistId
 artists = dict()
 
 genres = dict()
 
 artist_count = 0
 
-prefix_string = f"""@prefix rdf: <{general_prefix}/rdf/> .
-@prefix w3: <{schema_prefix}> ."""
-
-
-n3_file.write(prefix_string)
+with open("ontology_def.n3", "r") as ont_prefix:
+    for line in ont_prefix:
+        n3_file.write(line)
 
 for count, row in enumerate(csv.reader(data_file, delimiter=',')):
     if count == 0:
@@ -38,7 +33,6 @@ for count, row in enumerate(csv.reader(data_file, delimiter=',')):
     name = re.sub(r'\\', '', name)
 
     song_data = f'\nspot:s{song_id} dc:title "{name}"^^w3:string ; '
-    # song_data += f'spotp:type type:song ; '
     song_data += f'spotp:artists '
 
     artist_arr = row[1][2:len(row[1]) - 2]
@@ -155,5 +149,21 @@ for count, row in enumerate(csv.reader(data_by_artist_file, delimiter=',')):
         artist_data = artist_data[:-2] + ". "
 
     n3_file.write(artist_data)
+
+
+with open("cover_art.n3", "r") as cover_art_file:
+    for line in cover_art_file:
+        n3_file.write(line)
+
+
+with open("yt_videoid.n3", "r") as yt_videoid:
+    for line in yt_videoid:
+        n3_file.write(line)
+
+
+with open("similar_songs.n3", "r") as similar_songs:
+    for line in similar_songs:
+        n3_file.write(line)
+
 
 n3_file.close()
