@@ -1,6 +1,6 @@
-fl = open("data_test5_fix.n3", "r")
+fl = open("data.n3", "r")
 
-fo = open("data_fix_part0.n3", "w")
+fo = open("data_part0.n3", "w")
 fl_count = 1
 output = False
 for count, line in enumerate(fl):

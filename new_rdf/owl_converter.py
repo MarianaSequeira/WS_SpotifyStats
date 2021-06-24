@@ -9,7 +9,7 @@ schema_prefix = "http://www.w3.org/2001/XMLSchema#"
 
 data_file = open('data.csv', 'r')
 
-n3_file = open('data_test5.n3', 'w')
+n3_file = open('data.n3', 'w')
 
 music_artists = dict()
 
