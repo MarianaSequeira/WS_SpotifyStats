@@ -4,3 +4,4 @@ musicbrainzngs==0.7.1
 numpy==1.18.3
 Django==3.1.7
 s4api==1.1.0
+SPARQLWrapper==1.8.5
